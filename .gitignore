@@ -1,0 +1,4 @@
+articles/*
+!articles/first-post.md
+config.php
+vendor/

@@ -1,0 +1,15 @@
+{
+    "name": "sdkkr/phublish",
+    "description": "A lightweight php publishing tool",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stijn Dekker"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+      "erusev/parsedown": "^1.8"
+    }
+}
