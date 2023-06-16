@@ -42,6 +42,9 @@ foreach ($files as $file) {
     // Remove HTML comments containing "#key: value"
     $markdown = removeDataAttributeComments($markdown);
 
+    // Encode special characters in the markdown content
+    $markdown = htmlspecialchars($markdown, ENT_QUOTES, 'UTF-8');
+
     // Add a line break before each newline
     $markdown = str_replace("\n", "  \n", $markdown);
 
@@ -109,7 +112,8 @@ foreach ($articles as $article) {
 $articlesListContent .= "</ul></article>\n";
 
 // Write the modified template to the destination directory
-file_put_contents($destinationDirectory . 'index.html', str_replace('<!-- #CONTENT# -->', $articlesListContent, $template));
+file_put_contents($destinationDirectory . 'index.html', str_replace('<!-- #CONTENT# -->', $articlesListContent, 
+$template));
 
 // Generate the sitemap.xml file
 $sitemapContent = <<<XML
