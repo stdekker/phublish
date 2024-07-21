@@ -2,4 +2,5 @@ articles/*.txt
 !articles/first-post.txt
 links/*.txt
 config.php
+structure/*.html
 vendor/

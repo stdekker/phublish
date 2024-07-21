@@ -14,8 +14,8 @@ $destinationDirectory = $config['destination_directory'];
 // Get the base URL from the configuration
 $baseUrl = $config['base_url'];
 
-// Get the path to the HTML template
-$templatePath = __DIR__ . '/structure/html.html';
+// Get the path to the main HTML template
+$templatePath = __DIR__ . '/structure/main.html';
 
 // Get the current date and time
 $currentDateTime = date('Y-m-d H:i:s');

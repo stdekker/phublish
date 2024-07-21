@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="<!-- #LANG# -->">
+<head>
+  <meta charset="UTF-8">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width,initial-scale=1" name="viewport">
+  <title><!-- #TITLE --></title>
+  <link href="styles/main.css?v=5" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <link rel="alternate icon" href="images/shortcut_icon.ico">
+</head>
+<body>
+<header>
+    <h1><a href="/">
+    <svg class="brand-logo" version="1.1" viewBox="0 0 512 512" xml:space="preserve" 
+xmlns="http://www.w3.org/2000/svg">
+     <path d="m405.34 133.52-80.875-76.118h-324.47v341.34l229.63-0.016 111.71 
+55.875-0.016-55.859h64.016v-265.22zm-74.688-40.978 43.625 41.047h-43.625v-41.047zm53.344 284.87h-64.016l0.016 
+42.656-85.328-42.688-213.34 0.032v-298.67h288.01v76.188h74.656v222.48z"/>
+     <path d="m512 101.37c0-23.57-19.094-42.672-42.656-42.672-23.578 0-42.688 19.102-42.688 
+42.672v277.32h14.828l-14.828 46.234 42.688 28.453 42.656-28.452-14.812-46.234h14.812v-277.32zm-42.656 
+326.35-17.438-11.625 11.984-37.406h10.891l11.985 37.406-17.422 11.625zm21.312-70.36h-42.656v-255.99c0-11.766 
+9.562-21.336 21.344-21.336 11.75 0 21.312 9.57 21.312 21.336v255.99z"/>
+     <path d="m330.66 281.41h-255.99c-5.891 0-10.664 4.766-10.664 10.656 0 5.906 4.773 10.672 10.664 
+10.672h255.99c5.906 0 10.688-4.766 10.688-10.672 0-5.89-4.782-10.656-10.688-10.656z"/>
+     <path d="m330.66 217.4h-255.99c-5.891 0-10.664 4.773-10.664 10.672 0 5.891 4.773 10.664 10.664 
+10.664h255.99c5.906 0 10.688-4.773 10.688-10.664 0-5.898-4.782-10.672-10.688-10.672z"/>
+     <path d="m213.34 153.4h-138.67c-5.891 0-10.664 4.773-10.664 10.672 0 5.891 4.773 10.664 10.664 
+10.664h138.67c5.891 0 10.664-4.773 10.664-10.664 0-5.897-4.773-10.672-10.664-10.672z"/>
+   </svg>
+    <span class="brand-name">Phublish</span>
+    </a>
+    </h1>
+ </header>
+
+  <main>
+   <!-- #CONTENT# --> 
+  </main>
+  
+  <!-- #NAVIGATION# -->
+
+   <footer>
+    <p><strong>A phublish website &copy; <!-- #YEAR# --></strong></p>
+  </footer>
+</body>
+</html>
