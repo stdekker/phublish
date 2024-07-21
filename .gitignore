@@ -1,4 +1,5 @@
-articles/*
-!articles/first-post.md
+articles/*.txt
+!articles/first-post.txt
+links/*.txt
 config.php
 vendor/

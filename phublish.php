@@ -3,7 +3,10 @@
 $config = require_once 'config.php';
 
 // Get the source directory from the configuration or use the default value
-$sourceDirectory = isset($config['source_directory']) ? $config['source_directory'] : __DIR__ . '/articles/';
+$sourceDirectory = __DIR__ . '/articles/';
+
+// Get the links directory from the configuration or use the default value
+$linksDirectory = __DIR__ . '/links/';
 
 // Get the destination directory from the configuration
 $destinationDirectory = $config['destination_directory'];
@@ -17,12 +20,15 @@ $templatePath = __DIR__ . '/structure/html.html';
 // Get the current date and time
 $currentDateTime = date('Y-m-d H:i:s');
 
-// Get all .md files in the source directory
-$files = glob($sourceDirectory . '*.md');
+// Get all .txt files in the source directory
+$files = glob($sourceDirectory . '*.txt');
 
-// Check if any .md files were found
+// Get all .txt files in the links directory
+$linkFiles = glob($linksDirectory . '*.txt');
+
+// Check if any .txt files were found in the source directory
 if (empty($files)) {
-    echo "No .md files found in $sourceDirectory";
+    echo "No .txt files found in $sourceDirectory";
     exit;
 }
 
@@ -31,9 +37,9 @@ $articles = [];
 $template = file_get_contents($templatePath);
 $sitemapEntries = '';
 
-// Loop through each .md file
+// Loop through each .txt file in the source directory
 foreach ($files as $file) {
-    // Read the contents of the .md file
+    // Read the contents of the .txt file
     $markdown = file_get_contents($file);
 
     // Extract data attributes from HTML comments in the Markdown
@@ -45,9 +51,6 @@ foreach ($files as $file) {
     // Encode special characters in the markdown content
     $markdown = htmlspecialchars($markdown, ENT_QUOTES, 'UTF-8');
 
-    // Add a line break before each newline
-    $markdown = str_replace("\n", "  \n", $markdown);
-
     // Convert markdown to HTML
     $html = MarkdownToHtml($markdown);
     $html = "<article" . buildDataAttributesString($dataAttributes) . ">" . $html . "</article>";
@@ -55,8 +58,8 @@ foreach ($files as $file) {
     // Get the title of the article
     $articleTitle = getArticleTitle($html, $file);
 
-    // Create a new HTML file in the destination directory with the same name as the .md file
-    $fileName = basename(str_replace('.md', '.html', $file));
+    // Create a new HTML file in the destination directory with the same name as the .txt file
+    $fileName = basename(str_replace('.txt', '.html', $file));
     $htmlFile = $destinationDirectory . $fileName;
 
     // Create a copy of the articles array to remove the current article
@@ -96,6 +99,30 @@ foreach ($files as $file) {
     echo "Converted $file to $htmlFile\n";
 }
 
+// Loop through each .txt file in the links directory
+foreach ($linkFiles as $linkFile) {
+    // Read the contents of the .txt file
+    $content = file_get_contents($linkFile);
+    $lines = explode("\n", $content);
+    $title = trim($lines[0], "# \t\n\r\0\x0B"); // Extract the title by trimming "#" and whitespace
+    $url = trim($lines[1]); // Extract the URL
+
+    // Store the link information for sorting
+    $articles[] = [
+        'title' => $title,
+        'link' => $url,
+        'order' => PHP_INT_MAX, // Links can have a default high order to appear last if no specific order is provided
+    ];
+
+    // Append the link to the sitemap entries if it's a valid URL
+    if (filter_var($url, FILTER_VALIDATE_URL)) {
+        $sitemapEntries .= "<url><loc>{$url}</loc></url>\n";
+    }
+
+    // Output the creation status
+    echo "Processed link from $linkFile with title '$title' and URL '$url'\n";
+}
+
 // Sort the articles list based on the 'order' key in ascending order and then alphabetically
 usort($articles, function ($a, $b) {
     if ($a['order'] === $b['order']) {
@@ -112,8 +139,7 @@ foreach ($articles as $article) {
 $articlesListContent .= "</ul></article>\n";
 
 // Write the modified template to the destination directory
-file_put_contents($destinationDirectory . 'index.html', str_replace('<!-- #CONTENT# -->', $articlesListContent, 
-$template));
+file_put_contents($destinationDirectory . 'index.html', str_replace('<!-- #CONTENT# -->', $articlesListContent, $template));
 
 // Generate the sitemap.xml file
 $sitemapContent = <<<XML
@@ -219,4 +245,3 @@ function removeDataAttributeComments($markdown)
     return preg_replace('/<!--\s*#([^:]+):\s*([^->]+)\s*-->/m', '', $markdown);
 }
 ?>
-
