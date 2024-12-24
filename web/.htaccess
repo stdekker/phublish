@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteBase /
+
+# Ensure the requested file/directory doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite clean URLs to post locations
+RewriteRule ^([^/]+)$ posts/$1.html [L]
+
+# Rewrite homepage
+RewriteRule ^$ index.html [L] 

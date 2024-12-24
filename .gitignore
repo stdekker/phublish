@@ -1,0 +1,22 @@
+# Composer
+/vendor/
+composer.lock
+
+# Generated content
+/web/posts/
+/web/index.html
+
+# Configuration
+/config/blog.yaml
+
+# Content files
+/content/posts/*.md
+
+# PHPUnit
+.phpunit.result.cache
+
+# IDE and system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db 

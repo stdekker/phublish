@@ -1,0 +1,12 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}{{ post.title }} - {{ blog.title }}{% endblock %}
+
+{% block content %}
+    <article>
+        <h1>{{ post.title }}</h1>
+        <time datetime="{{ post.date }}">{{ post.formatted_date }}</time>
+        
+        {{ post.content|raw }}
+    </article>
+{% endblock %} 

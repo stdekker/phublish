@@ -1,0 +1,23 @@
+{
+    "name": "sdkkr/blog",
+    "description": "Simple static blog generator",
+    "type": "project",
+    "license": "GPL-3",
+    "autoload": {
+        "psr-4": {
+            "Sdkkr\\Blog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Stijn Dekker",
+            "email": "stijn.dekker@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "league/commonmark": "^2.4",
+        "twig/twig": "^3.0",
+        "symfony/yaml": "^6.0"
+    }
+}
