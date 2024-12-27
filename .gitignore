@@ -11,6 +11,7 @@ composer.lock
 
 # Content files
 /content/posts/*.md
+/data/tokens.json
 
 # PHPUnit
 .phpunit.result.cache

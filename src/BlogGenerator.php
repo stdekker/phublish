@@ -27,6 +27,9 @@ class BlogGenerator
             $this->config['blog']['public_web_dir'] = dirname(__DIR__) . '/web';
         }
         
+        // Resolve the web directory path to remove any ../ references
+        $this->config['blog']['public_web_dir'] = realpath($this->config['blog']['public_web_dir']) ?: $this->config['blog']['public_web_dir'];
+        
         // Set up CommonMark
         $config = [
             'html_input' => 'strip',
