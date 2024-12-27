@@ -1,11 +1,11 @@
 {
-    "name": "sdkkr/blog",
+    "name": "phublish/phublish",
     "description": "Simple static blog generator",
     "type": "project",
     "license": "GPL-3",
     "autoload": {
         "psr-4": {
-            "Sdkkr\\Blog\\": "src/"
+            "Phublish\\": "src/"
         }
     },
     "authors": [

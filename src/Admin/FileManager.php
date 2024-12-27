@@ -1,5 +1,5 @@
 <?php
-namespace Sdkkr\Blog\Admin;
+namespace Phublish\Admin;
 
 class FileManager {
     public static function listFiles(): array {

@@ -1,7 +1,7 @@
 <?php
 require_once '../../vendor/autoload.php';
 
-use Sdkkr\Blog\Admin\Auth;
+use Phublish\Admin\Auth;
 use Symfony\Component\Yaml\Yaml;
 
 // Load blog configuration

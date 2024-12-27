@@ -1,6 +1,6 @@
 <?php
 
-namespace Sdkkr\Blog;
+namespace Phublish;
 
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment\Environment;
@@ -21,6 +21,11 @@ class BlogGenerator
         // Load configuration
         $configPath = dirname(__DIR__) . '/config/blog.yaml';
         $this->config = Yaml::parseFile($configPath);
+        
+        // Set default public web directory if not specified
+        if (empty($this->config['blog']['public_web_dir'])) {
+            $this->config['blog']['public_web_dir'] = dirname(__DIR__) . '/web';
+        }
         
         // Set up CommonMark
         $config = [
@@ -45,8 +50,7 @@ class BlogGenerator
     
     public function generate(): void
     {
-        $projectRoot = dirname(__DIR__);
-        $webDir = $projectRoot . '/web';
+        $webDir = $this->config['blog']['public_web_dir'];
         
         // Create web directory if it doesn't exist
         if (!is_dir($webDir)) {
@@ -64,7 +68,7 @@ class BlogGenerator
         }
         
         // Get all markdown files from content/posts
-        $postsPath = $projectRoot . '/content/posts';
+        $postsPath = dirname(__DIR__) . '/content/posts';
         $posts = glob($postsPath . '/*.md');
         
         $allPosts = [];
@@ -168,7 +172,8 @@ class BlogGenerator
             'posts' => $posts
         ]);
         
-        file_put_contents(__DIR__ . '/../web/index.html', $html);
+        $webDir = $this->config['blog']['public_web_dir'];
+        file_put_contents($webDir . '/index.html', $html);
     }
     
     private function createSlug(string $title): string

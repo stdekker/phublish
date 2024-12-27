@@ -1,5 +1,5 @@
 <?php
-namespace Sdkkr\Blog\Admin;
+namespace Phublish\Admin;
 
 use Symfony\Component\Yaml\Yaml;
 

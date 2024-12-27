@@ -3,7 +3,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$generator = new Sdkkr\Blog\BlogGenerator();
+$generator = new Phublish\BlogGenerator();
 $generator->generate();
 
 // Debug: List only generated files

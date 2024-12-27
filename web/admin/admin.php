@@ -1,8 +1,8 @@
 <?php
 require_once '../../vendor/autoload.php';
 
-use Sdkkr\Blog\Admin\Auth;
-use Sdkkr\Blog\Admin\AdminController;
+use Phublish\Admin\Auth;
+use Phublish\Admin\AdminController;
 use Symfony\Component\Yaml\Yaml;
 
 // Enable error reporting for debugging

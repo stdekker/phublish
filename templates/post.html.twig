@@ -16,10 +16,10 @@
     
     <nav aria-label="Post navigation" class="post-navigation">
         {% if previous_post is defined %}
-            <a href="/{{ previous_post.slug }}" rel="prev">Previous: {{ previous_post.title }}</a>
+            <a href="{{ blog.base_url }}/posts/{{ previous_post.slug }}.html" rel="prev">Previous: {{ previous_post.title }}</a>
         {% endif %}
         {% if next_post is defined %}
-            <a href="/{{ next_post.slug }}" rel="next">Next: {{ next_post.title }}</a>
+            <a href="{{ blog.base_url }}/posts/{{ next_post.slug }}.html" rel="next">Next: {{ next_post.title }}</a>
         {% endif %}
     </nav>
 {% endblock %} 

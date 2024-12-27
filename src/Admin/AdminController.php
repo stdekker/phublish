@@ -1,8 +1,8 @@
 <?php
-namespace Sdkkr\Blog\Admin;
+namespace Phublish\Admin;
 
-use Sdkkr\Blog\BlogGenerator;
-use Sdkkr\Blog\Admin\Mailer;
+use Phublish\BlogGenerator;
+use Phublish\Admin\Mailer;
 use Symfony\Component\Yaml\Yaml;
 
 class AdminController {

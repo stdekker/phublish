@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 function generateLoginToken($adminEmail = null) {
     // Generate a secure random token
-    $token = bin2hex(random_bytes(32));
+    $token = bin2hex(random_bytes(48));
     
     // Token will expire in 1 hour
     $expires = time() + 3600;
