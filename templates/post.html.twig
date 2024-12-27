@@ -3,10 +3,23 @@
 {% block title %}{{ post.title }} - {{ blog.title }}{% endblock %}
 
 {% block content %}
-    <article>
-        <h1>{{ post.title }}</h1>
-        <time datetime="{{ post.date }}">{{ post.formatted_date }}</time>
+    <article role="article">
+        <header>
+            <h1 id="post-title">{{ post.title }}</h1>
+            <time datetime="{{ post.date }}" aria-label="Published on {{ post.formatted_date }}">{{ post.formatted_date }}</time>
+        </header>
         
-        {{ post.content|raw }}
+        <div class="post-content" aria-labelledby="post-title">
+            {{ post.content|raw }}
+        </div>
     </article>
+    
+    <nav aria-label="Post navigation" class="post-navigation">
+        {% if previous_post is defined %}
+            <a href="/{{ previous_post.slug }}" rel="prev">Previous: {{ previous_post.title }}</a>
+        {% endif %}
+        {% if next_post is defined %}
+            <a href="/{{ next_post.slug }}" rel="next">Next: {{ next_post.title }}</a>
+        {% endif %}
+    </nav>
 {% endblock %} 

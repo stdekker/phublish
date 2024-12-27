@@ -13,7 +13,7 @@
         </div>
         
         {% if post.has_more %}
-        <p><a href="/{{ post.slug }}">Read more...</a></p>
+        <p><a href="/{{ post.slug }}" aria-label="Read more of {{ post.title }}">Read more…</a></p>
         {% endif %}
     </article>
     
