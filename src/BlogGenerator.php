@@ -98,6 +98,9 @@ class BlogGenerator
                 continue;
             }
             
+            // Get slug from filename
+            $slug = basename($post, '.md');
+            
             $content = implode("\n", $contentLines);
             
             // Split content into teaser and full content
@@ -117,7 +120,7 @@ class BlogGenerator
                 'content' => $contentHtml,
                 'teaser' => $teaserHtml,
                 'has_more' => count($parts) > 1,
-                'slug' => $metadata['slug'] ?? $this->createSlug($metadata['title'] ?? 'untitled')
+                'slug' => $slug
             ];
             
             $allPosts[] = $postData;

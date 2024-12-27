@@ -78,7 +78,10 @@ if (!Auth::checkAuth()) {
 <body>
     <header class="main-header">
         <h1>Edit Markdown Files</h1>
-        <button id="logoutButton" class="danger-button">Logout</button>
+        <button id="logoutButton" class="danger-button">
+            <span class="logout-text">Logout</span>
+            <span class="logout-icon"></span>
+        </button>
     </header>
     <div class="container">
         <div class="field-group">
@@ -92,24 +95,19 @@ if (!Auth::checkAuth()) {
             <span class="error-message" id="date-error"></span>
         </div>
         <div class="field-group">
-            <label for="slug">Slug:</label>
-            <input type="text" id="slug" />
-            <span class="error-message" id="slug-error"></span>
-        </div>
-        <div class="field-group">
             <label for="draft">Draft:</label>
             <input type="checkbox" id="draft" />
         </div>
-        <div class="current-file">
-            <span class="current-file-label">Current file:</span>
-            <span id="currentFileName" class="current-file-name">New file</span>
+        <div class="current-file field-group">
+            <label for="currentFileName">Filename:</label>
+            <input type="text" id="currentFileName" />
+            <span class="error-message" id="filename-error"></span>
         </div>
         <textarea id="editor"></textarea>
         <div class="button-group">
             <button id="saveButton">Save</button>
             <button id="openFileButton">Open File</button>
             <button id="newFileButton">New File</button>
-            <button id="renameFileButton">Rename File</button>
             <span class="error-message" id="save-error"></span>
         </div>
     </div>
@@ -152,7 +150,23 @@ if (!Auth::checkAuth()) {
         </div>
     </div>
 
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="messageModalTitle">Message</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="messageModalContent"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="action-button">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script src="editor.js"></script>
+    <script type="module" src="js/editor.js"></script>
 </body>
 </html> 

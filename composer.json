@@ -18,6 +18,7 @@
     "require": {
         "league/commonmark": "^2.4",
         "twig/twig": "^3.0",
-        "symfony/yaml": "^6.0"
+        "symfony/yaml": "^6.0",
+        "symfony/mailer": "^6.0"
     }
 }

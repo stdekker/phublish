@@ -59,27 +59,6 @@ class FileManager {
         return true;
     }
     
-    public static function renameFile(string $oldName, string $newName): bool {
-        $oldFile = Config::getContentPath() . basename($oldName);
-        $newFile = Config::getContentPath() . basename($newName);
-        
-        if (!file_exists($oldFile)) {
-            error_log("Source file not found: " . $oldFile);
-            return false;
-        }
-        
-        if (file_exists($newFile)) {
-            error_log("Destination file already exists: " . $newFile);
-            return false;
-        }
-        
-        $result = rename($oldFile, $newFile);
-        if (!$result) {
-            error_log("Failed to rename file from " . $oldFile . " to " . $newFile);
-        }
-        return $result;
-    }
-
     public static function deleteFile(string $filename): bool {
         $file = Config::getContentPath() . basename($filename);
         

@@ -8,6 +8,19 @@ body {
     color: #e6e6e6;
 }
 
+header h1 {
+    font-family: monospace;
+}
+header h1 a {
+    color: #505050;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header h1 a:hover {
+    color: #999;
+}
+
 article {
     margin: 2rem 0;
 }
@@ -35,4 +48,18 @@ hr {
     border: none;
     border-top: 1px solid #333;
     margin: 2rem 0;
+}
+
+footer {
+    font-family: monospace;
+    font-size: 0.85em;
+    color: #666;
+}
+
+footer p {
+    transition: color 0.3s ease;
+}
+
+footer p:hover {
+    color: #999;
 }
