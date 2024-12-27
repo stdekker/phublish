@@ -20,3 +20,6 @@ composer.lock
 .vscode/
 .DS_Store
 Thumbs.db 
+
+# Token files
+/data/tokens.json 

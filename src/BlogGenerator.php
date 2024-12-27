@@ -151,7 +151,7 @@ class BlogGenerator
             'post' => $post
         ]);
         
-        $webDir = dirname(__DIR__) . '/web';
+        $webDir = $this->config['blog']['public_web_dir'];
         $postsDir = $webDir . '/posts';
         
         // Create posts directory if it doesn't exist

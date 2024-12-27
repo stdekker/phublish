@@ -3,4 +3,6 @@ blog:
   description: "A personal blog"
   date_format: "d/m/Y"  # PHP date format string
   allowed_domain: "https://example.com"  # Domain allowed to access admin interface
-  session_lifetime: 3600  # Session lifetime in seconds (1 hour default) 
+  session_lifetime: 3600  # Session lifetime in seconds (1 hour default)
+  admin_email: "admin@example.com"  # Admin email address
+  public_web_dir: "/path/to/your/public/web/dir"  # New configuration setting  
