@@ -6,6 +6,7 @@ blog:
   session_lifetime: 3600  # Session lifetime in seconds (1 hour default)
   admin_email: "admin@example.com"  # Admin email address
   public_web_dir: "/path/to/your/public/web/dir"  # New configuration setting  
+  posts_per_page: 5  # Number of posts to show on the front page
   mailer_dsn: "smtp://localhost:1025"  # For DDEV Mailpit
   
   # SMTP Configuration

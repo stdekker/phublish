@@ -144,8 +144,14 @@ class BlogGenerator
             return $dateB - $dateA;
         });
         
-        // Generate index page
-        $this->generateIndex($allPosts);
+        // Get the number of posts to show on the front page
+        $postsPerPage = $this->config['blog']['posts_per_page'] ?? 5;
+        
+        // Generate index page with limited posts
+        $this->generateIndex(array_slice($allPosts, 0, $postsPerPage));
+        
+        // Generate archive page with all posts
+        $this->generateArchive($allPosts);
     }
     
     private function generatePost(array $post): void
@@ -177,6 +183,16 @@ class BlogGenerator
         
         $webDir = $this->config['blog']['public_web_dir'];
         file_put_contents($webDir . '/index.html', $html);
+    }
+    
+    private function generateArchive(array $posts): void
+    {
+        $html = $this->twig->render('archive.html.twig', [
+            'posts' => $posts
+        ]);
+        
+        $webDir = $this->config['blog']['public_web_dir'];
+        file_put_contents($webDir . '/archive.html', $html);
     }
     
     private function createSlug(string $title): string

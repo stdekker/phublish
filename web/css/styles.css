@@ -36,17 +36,30 @@ body {
     color: #e6e6e6;
 }
 
-header h1 {
-    font-family: monospace;
-}
-header h1 a {
-    color: #505050;
+/* Global link styles */
+a {
+    color: #7e3d3d;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
+a:hover {
+    color: #ff8080;
+    text-decoration: underline;
+}
+
+/* Header specific styles */
+header h1 {
+    font-family: monospace;
+}
+
+header h1 a {
+    color: #e6e6e6;
+}
+
 header h1 a:hover {
-    color: #999;
+    color: #ff8080;
+    text-decoration: none;
 }
 
 article {
@@ -62,23 +75,13 @@ article h2 {
     margin-bottom: 0.5rem;
 }
 
-article h2 a {
-    color: #7e3d3d;
-    text-decoration: none;
-}
-
-article h2 a:hover {
-    text-decoration: underline;
-    color: #ff8080;
-}
-
-article a {
+/* Content links that need to stand out more */
+article .post-content a {
     color: #ff8080;
     text-decoration: underline;
-    transition: color 0.3s ease;
 }
 
-article a:hover {
+article .post-content a:hover {
     color: #ffb3b3;
 }
 
@@ -100,4 +103,52 @@ footer p {
 
 footer p:hover {
     color: #999;
+}
+
+.archive-list {
+    list-style: none;
+    padding: 0;
+}
+
+.archive-item {
+    margin: 1rem 0;
+}
+
+.archive-item time {
+    color: #999;
+    font-size: 0.9em;
+    margin-right: 1rem;
+}
+
+.archive-item a {
+    color: #7e3d3d;
+    text-decoration: none;
+}
+
+.archive-item a:hover {
+    text-decoration: underline;
+    color: #ff8080;
+}
+
+.archive-link {
+    margin-top: 2rem;
+}
+
+.archive-link .separator {
+    color: #666;
+    margin: 0 0.5rem;
+}
+
+.post-navigation {
+    margin: 2rem 0;
+}
+
+.post-navigation a {
+    color: #7e3d3d;
+    text-decoration: none;
+}
+
+.post-navigation a:hover {
+    text-decoration: underline;
+    color: #ff8080;
 }

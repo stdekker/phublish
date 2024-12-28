@@ -1,0 +1,19 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Archive - {{ blog.title }}{% endblock %}
+
+{% block content %}
+    <h2>Blog Archive</h2>
+    
+    <ul class="archive-list">
+        {% for post in posts %}
+            <li class="archive-item">
+                <a href="/posts/{{ post.slug }}.html">{{ post.title }}</a> - <time datetime="{{ post.date }}">{{ post.formatted_date }}</time>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="archive-link">
+        <p><a href="/">← Back to home</a></p>
+    </div>
+{% endblock %} 

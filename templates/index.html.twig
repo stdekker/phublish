@@ -5,7 +5,7 @@
 {% block content %}
     {% for post in posts %}
     <article>
-        <h2><a href="{{ blog.base_url }}/{{ post.slug }}">{{ post.title }}</a></h2>
+        <h2><a href="/posts/{{ post.slug }}.html">{{ post.title }}</a></h2>
         <time datetime="{{ post.date }}">{{ post.formatted_date }}</time>
         
         <div class="post-teaser">
@@ -13,7 +13,7 @@
         </div>
         
         {% if post.has_more %}
-        <p><a href="{{ blog.base_url }}/{{ post.slug }}" aria-label="Read more of {{ post.title }}">Read more…</a></p>
+        <p><a href="/posts/{{ post.slug }}.html" aria-label="Read more of {{ post.title }}">Read more…</a></p>
         {% endif %}
     </article>
     
@@ -21,4 +21,8 @@
     <hr>
     {% endif %}
     {% endfor %}
+    
+    <div class="archive-link">
+        <p><a href="/archive.html">View all posts in the archive →</a></p>
+    </div>
 {% endblock %} 
