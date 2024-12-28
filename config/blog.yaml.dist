@@ -6,3 +6,13 @@ blog:
   session_lifetime: 3600  # Session lifetime in seconds (1 hour default)
   admin_email: "admin@example.com"  # Admin email address
   public_web_dir: "/path/to/your/public/web/dir"  # New configuration setting  
+  mailer_dsn: "smtp://localhost:1025"  # For DDEV Mailpit
+  
+  # SMTP Configuration
+  smtp:
+    host: "localhost"      # SMTP server hostname
+    port: 1025            # SMTP server port
+    encryption: null      # Encryption type: 'tls', 'ssl', or null
+    username: null        # SMTP username (null for no auth)
+    password: null        # SMTP password (null for no auth)
+    from_name: "Blog Admin"  # Name to show in from field
