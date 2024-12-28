@@ -5,6 +5,7 @@ composer.lock
 # Generated content
 /web/posts/
 /web/index.html
+/web/archive.html
 
 # Configuration
 /config/blog.yaml

@@ -3,7 +3,7 @@ An open source static site generator for publishing blogs.
 
 ## Features
 
-- ** No database**: No need to setup a database
+- **No database**: No need to setup a database
 - **Static Site Generation**: Converts Markdown files to static HTML blog posts
 - **Public admin interface**: Token-based authentication with email login links
 - **Markdown editor**: Built-in editor with live preview using SimpleMDE
