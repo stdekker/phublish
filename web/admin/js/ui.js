@@ -259,4 +259,154 @@ export function showContextMenu(event, fileName, onRename, onDelete) {
             document.removeEventListener('click', closeMenu);
         }
     });
+}
+
+export class UploadsManagerModal extends Modal {
+    constructor(editor) {
+        super('uploadsManagerModal');
+        this.editor = editor;
+        this.fileInput = this.modal.querySelector('#fileUploadInput');
+        this.uploadButton = this.modal.querySelector('#uploadFileButton');
+        this.fileList = this.modal.querySelector('#fileList');
+        this.addToEditorButton = this.modal.querySelector('#addToEditorButton');
+        this.selectedFile = null;
+        
+        this.setupUploadHandler();
+        this.setupSelectionHandler();
+        this.setupAddToEditorHandler();
+    }
+
+    setupUploadHandler() {
+        this.uploadButton.addEventListener('click', () => this.uploadFile());
+    }
+
+    async uploadFile() {
+        const file = this.fileInput.files[0];
+        if (!file) {
+            alert('Please select a file to upload.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('uploads_manager.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('File uploaded successfully');
+                this.loadFiles();
+            } else {
+                alert('Failed to upload file: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    }
+
+    setupSelectionHandler() {
+        this.fileList.addEventListener('click', (e) => {
+            // Clear previous selections
+            this.fileList.querySelectorAll('.file-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            const fileItem = e.target.closest('.file-item');
+            if (fileItem) {
+                fileItem.classList.add('selected');
+                this.selectedFile = fileItem.dataset.filename;
+                this.addToEditorButton.disabled = false;
+            }
+        });
+    }
+
+    setupAddToEditorHandler() {
+        this.addToEditorButton.addEventListener('click', () => {
+            if (this.selectedFile) {
+                const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(this.selectedFile);
+                const baseUrl = window.location.origin;
+                const filePath = `${baseUrl}/uploads/${this.selectedFile}`;
+                
+                if (isImage) {
+                    this.editor.exec('addImage', {
+                        altText: this.selectedFile,
+                        imageUrl: filePath
+                    });
+                } else {
+                    this.editor.exec('addLink', {
+                        linkText: this.selectedFile,
+                        linkUrl: filePath
+                    });
+                }
+                
+                this.close();
+            }
+        });
+    }
+
+    async loadFiles() {
+        try {
+            const response = await fetch('uploads_manager.php');
+            const result = await response.json();
+            
+            if (result.success && Array.isArray(result.files)) {
+                this.fileList.innerHTML = '';
+                result.files.forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = 'file-item';
+                    li.dataset.filename = file.name;
+                    
+                    const fileInfo = document.createElement('span');
+                    fileInfo.className = 'file-info';
+                    fileInfo.textContent = `${file.name} (Uploaded: ${file.date})`;
+                    
+                    li.appendChild(fileInfo);
+                    li.appendChild(this.createDeleteButton(file.name));
+                    this.fileList.appendChild(li);
+                });
+            } else {
+                alert('Failed to load files: ' + (result.error || 'Unexpected response format'));
+            }
+        } catch (error) {
+            console.error('Error loading files:', error);
+        }
+    }
+
+    createDeleteButton(fileName) {
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete-button';
+        deleteButton.onclick = () => this.confirmDelete(fileName);
+        return deleteButton;
+    }
+
+    confirmDelete(fileName) {
+        if (confirm(`Are you sure you want to delete ${fileName}?`)) {
+            this.deleteFile(fileName);
+        }
+    }
+
+    async deleteFile(fileName) {
+        try {
+            const response = await fetch('uploads_manager.php', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `file=${encodeURIComponent(fileName)}`
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('File deleted successfully');
+                this.loadFiles();
+            } else {
+                alert('Failed to delete file: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+    }
 } 

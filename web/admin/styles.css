@@ -407,4 +407,225 @@ button:disabled {
 
 #newFileName::placeholder {
     color: #aaa;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: 1px solid red;
+    color: red;
+    padding: 2px 5px;
+    font-size: 0.8em;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: red;
+    color: white;
+}
+
+/* File Manager Styles */
+.file-manager {
+    padding: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-manager ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-manager li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.file-manager li:last-child {
+    border-bottom: none;
+}
+
+.file-manager li:hover {
+    background-color: #f1f1f1;
+}
+
+.file-manager .file-info {
+    flex-grow: 1;
+    margin-right: 10px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.file-manager .delete-button {
+    background-color: transparent;
+    border: 1px solid red;
+    color: red;
+    padding: 4px 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.file-manager .delete-button:hover {
+    background-color: red;
+    color: white;
+}
+
+.file-manager-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.file-manager-header h2 {
+    margin: 0;
+    font-size: 1.4em;
+    color: #444;
+}
+
+.file-manager-header button {
+    padding: 6px 12px;
+    font-size: 0.9em;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+.file-manager-header button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Uploads Manager Modal Styles */
+#uploadsManagerModal .modal-content {
+    max-width: 800px;
+    width: 90%;
+}
+
+#uploadsManagerModal .modal-body {
+    padding: 20px;
+}
+
+#fileUploadInput {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#fileList {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-item:hover {
+    background-color: #f8f9fa;
+}
+
+.file-info {
+    flex-grow: 1;
+    margin-right: 15px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+#uploadFileButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#uploadFileButton:hover {
+    background-color: #45a049;
+}
+
+#uploadFileButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Delete button within file items */
+.file-item .delete-button {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 4px 8px;
+    font-size: 0.85em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.file-item .delete-button:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Add these new styles for the file selection */
+.file-item {
+    cursor: pointer;
+}
+
+.file-item.selected {
+    background-color: #e3f2fd;
+}
+
+.file-list-container {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#addToEditorButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Ensure delete button doesn't trigger selection */
+.file-item .delete-button {
+    pointer-events: none;
+}
+
+.file-item .delete-button-wrapper {
+    pointer-events: auto;
 } 

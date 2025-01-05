@@ -107,9 +107,10 @@ if (!Auth::checkAuth()) {
         </div>
         <div id="editor"></div>
         <div class="button-group">
-            <button id="saveButton">Save</button>
-            <button id="openFileButton">Open File</button>
-            <button id="newFileButton">New File</button>
+            <button id="saveButton">Save post</button>
+            <button id="openFileButton">Open post</button>
+            <button id="newFileButton">New post</button>
+            <button id="manageFilesButton">Manage Uploads</button>
             <span class="error-message" id="save-error"></span>
         </div>
     </div>
@@ -164,6 +165,27 @@ if (!Auth::checkAuth()) {
             </div>
             <div class="modal-footer">
                 <button class="action-button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this modal for file management -->
+    <div id="uploadsManagerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Manage Uploads</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <input type="file" id="fileUploadInput" />
+                <button id="uploadFileButton">Upload</button>
+                <div class="file-list-container">
+                    <ul id="fileList"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="addToEditorButton" class="action-button" disabled>Add to Editor</button>
+                <button class="cancel-button">Close</button>
             </div>
         </div>
     </div>

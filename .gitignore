@@ -25,3 +25,6 @@ Thumbs.db
 
 # Token files
 /data/tokens.json 
+
+# Uploaded content
+/web/uploads/ 

@@ -4,6 +4,7 @@ import {
     MessageModal, 
     FileModal, 
     DeleteModal, 
+    UploadsManagerModal,
     showError,
     clearErrors,
     showSuccessMessage,
@@ -22,7 +23,7 @@ class Editor {
                 ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
                 ['ul', 'ol', 'task', 'indent', 'outdent'],
-                ['table', 'image', 'link'],
+                ['table', 'link'],
                 ['code', 'codeblock'],
                 ['scrollSync']
             ]
@@ -30,6 +31,7 @@ class Editor {
         this.messageModal = new MessageModal();
         this.fileModal = new FileModal();
         this.deleteModal = new DeleteModal();
+        this.uploadsManagerModal = new UploadsManagerModal(this.editor);
         
         this.setupEventListeners();
         this.initialize();
@@ -67,6 +69,12 @@ class Editor {
 
         Object.entries(buttonHandlers).forEach(([buttonId, handler]) => {
             document.getElementById(buttonId).addEventListener('click', () => this[handler]());
+        });
+
+        // Add event listener for the manage files button
+        document.getElementById('manageFilesButton').addEventListener('click', () => {
+            this.uploadsManagerModal.show();
+            this.uploadsManagerModal.loadFiles();
         });
     }
 
