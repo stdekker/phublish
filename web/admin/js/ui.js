@@ -201,8 +201,8 @@ export function showSuccessMessage(message, postUrl = null) {
     const existingMessages = document.querySelectorAll('.message');
     existingMessages.forEach(msg => msg.remove());
     
-    // Add the new message before the editor
-    const editor = document.querySelector('.CodeMirror');
+    // Add the new message above the editor
+    const editor = document.getElementById('editor');
     editor.parentNode.insertBefore(container, editor);
     
     // Auto-hide after 10 seconds

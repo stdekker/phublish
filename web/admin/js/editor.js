@@ -13,7 +13,20 @@ import {
 
 class Editor {
     constructor() {
-        this.simplemde = new SimpleMDE({ element: document.getElementById("editor") });
+        this.editor = new toastui.Editor({
+            el: document.getElementById('editor'),
+            height: '500px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical',
+            toolbarItems: [
+                ['heading', 'bold', 'italic', 'strike'],
+                ['hr', 'quote'],
+                ['ul', 'ol', 'task', 'indent', 'outdent'],
+                ['table', 'image', 'link'],
+                ['code', 'codeblock'],
+                ['scrollSync']
+            ]
+        });
         this.messageModal = new MessageModal();
         this.fileModal = new FileModal();
         this.deleteModal = new DeleteModal();
@@ -149,7 +162,7 @@ class Editor {
             return;
         }
 
-        const content = this.simplemde.value();
+        const content = this.editor.getMarkdown();
         const fullContent = formatMetadata(metadata, content);
         
         try {
@@ -198,7 +211,7 @@ class Editor {
         document.getElementById('title').value = '';
         document.getElementById('date').value = '';
         document.getElementById('draft').checked = false;
-        this.simplemde.value('');
+        this.editor.setMarkdown('');
         document.getElementById('currentFileName').value = 'new-post.md';
         this.fileModal.fileSelector.value = '';
     }
@@ -213,7 +226,7 @@ class Editor {
             document.getElementById('title').value = metadata.title || '';
             document.getElementById('date').value = metadata.date || '';
             document.getElementById('draft').checked = metadata.status === 'draft';
-            this.simplemde.value(metadata.content || '');
+            this.editor.setMarkdown(metadata.content || '');
             document.getElementById('currentFileName').value = fileName;
             this.fileModal.close();
         } catch (error) {

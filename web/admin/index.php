@@ -72,7 +72,7 @@ if (!Auth::checkAuth()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Editor</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -89,21 +89,23 @@ if (!Auth::checkAuth()) {
             <input type="text" id="title" />
             <span class="error-message" id="title-error"></span>
         </div>
-        <div class="field-group">
-            <label for="date">Date:</label>
-            <input type="date" id="date" />
-            <span class="error-message" id="date-error"></span>
+        <div class="fields-container">
+            <div class="field-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" />
+                <span class="error-message" id="date-error"></span>
+            </div>
+            <div class="field-group draft-group">
+                <label for="draft">Draft:</label>
+                <input type="checkbox" id="draft" />
+            </div>
         </div>
         <div class="field-group">
-            <label for="draft">Draft:</label>
-            <input type="checkbox" id="draft" />
-        </div>
-        <div class="current-file field-group">
             <label for="currentFileName">Filename:</label>
             <input type="text" id="currentFileName" />
             <span class="error-message" id="filename-error"></span>
         </div>
-        <textarea id="editor"></textarea>
+        <div id="editor"></div>
         <div class="button-group">
             <button id="saveButton">Save</button>
             <button id="openFileButton">Open File</button>
@@ -166,7 +168,7 @@ if (!Auth::checkAuth()) {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script type="module" src="js/editor.js"></script>
 </body>
 </html> 
