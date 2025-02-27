@@ -531,89 +531,178 @@ button:disabled {
 #fileList {
     list-style: none;
     padding: 0;
-    margin: 20px 0 0 0;
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #eee;
-    border-radius: 4px;
+    margin: 0;
+    width: 100%;
 }
 
 .file-item {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 1fr 80px;
+    gap: 15px;
     align-items: center;
-    padding: 12px 15px;
+    padding: 10px 15px;
     border-bottom: 1px solid #eee;
     background-color: #fff;
     transition: background-color 0.2s;
+}
+
+.file-item.header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
 }
 
 .file-item:last-child {
     border-bottom: none;
 }
 
-.file-item:hover {
+.file-item:hover:not(.header) {
     background-color: #f8f9fa;
 }
 
-.file-info {
-    flex-grow: 1;
-    margin-right: 15px;
-    font-size: 0.9em;
+.file-item.selected:not(.header) {
+    background-color: #e8f5e9;
+}
+
+.file-name-col {
+    font-weight: 500;
     color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-#uploadFileButton {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.file-date-col {
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
 }
 
-#uploadFileButton:hover {
-    background-color: #45a049;
+.file-actions-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#uploadFileButton:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-/* Delete button within file items */
-.file-item .delete-button {
-    background-color: transparent;
-    border: 1px solid #dc3545;
+.delete-button {
+    background-color: white;
     color: #dc3545;
-    padding: 4px 8px;
-    font-size: 0.85em;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 2px solid #dc3545;
+    border-radius: 50%;
     cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s;
+    font-size: 20px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 100;
 }
 
-.file-item .delete-button:hover {
+.delete-button:hover {
     background-color: #dc3545;
     color: white;
+    transform: scale(1.1);
 }
 
-/* Add these new styles for the file selection */
-.file-item {
-    cursor: pointer;
-}
-
-.file-item.selected {
-    background-color: #e3f2fd;
-}
-
+/* File list container with fixed header */
 .file-list-container {
     margin-top: 20px;
     border: 1px solid #ddd;
     border-radius: 4px;
     max-height: 300px;
     overflow-y: auto;
+    position: relative; /* For proper positioning of sticky elements */
+}
+
+#fileList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+/* Fixed header */
+.file-item.header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-item:hover:not(.header) {
+    background-color: #f8f9fa;
+}
+
+.file-item.selected:not(.header) {
+    background-color: #e8f5e9;
+}
+
+.file-name-col {
+    font-weight: 500;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-date-col {
+    color: #666;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.file-actions-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-button {
+    background-color: white;
+    color: #dc3545;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 2px solid #dc3545;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.delete-button:hover {
+    background-color: #dc3545;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Ensure the button is always clickable */
+.delete-button,
+.file-actions-col {
+    pointer-events: auto !important;
+}
+
+/* Remove any existing pointer-events: none */
+.file-item * {
+    pointer-events: auto;
 }
 
 #addToEditorButton:disabled {
@@ -621,11 +710,78 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Ensure delete button doesn't trigger selection */
-.file-item .delete-button {
-    pointer-events: none;
+/* File Table Styles */
+.file-table-header {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr;
+    gap: 10px;
+    padding: 10px 15px;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-.file-item .delete-button-wrapper {
-    pointer-events: auto;
+.file-table {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.file-table li {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr;
+    gap: 10px;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.file-table li:hover {
+    background-color: #f1f1f1;
+}
+
+.file-table li.selected {
+    background-color: #e8f5e9;
+}
+
+.file-title-col {
+    font-weight: 500;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-date-col {
+    color: #666;
+    font-size: 0.9em;
+    text-align: right;
+}
+
+.file-list-container {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #fff;
+    margin-bottom: 10px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+/* File List Modal Specific */
+#fileModal .modal-content {
+    max-width: 800px;
+    width: 90%;
+}
+
+#modalDeleteButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 } 

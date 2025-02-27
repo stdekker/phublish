@@ -1,8 +1,12 @@
 <?php
 require_once '../../vendor/autoload.php';
 use Phublish\Admin\Auth;
+use Phublish\Admin\Security;
 use Phublish\Admin\AdminController;
 use Symfony\Component\Yaml\Yaml;
+
+// Perform security checks - login page doesn't require authentication
+Security::securityCheck(false, false);
 
 // Load blog configuration
 $configPath = dirname(__DIR__, 2) . '/config/blog.yaml';
@@ -89,100 +93,18 @@ $sessionLifetimeMinutes = round($sessionLifetime / 60);
                 <p id="messageModalContent"></p>
             </div>
             <div class="modal-footer">
-                <button class="action-button" onclick="closeMessageModal()">OK</button>
+                <button class="action-button">OK</button>
             </div>
         </div>
     </div>
 
-    <script>
-        function showMessageModal(title, message, type = 'info') {
-            const modal = document.getElementById('messageModal');
-            const modalContent = modal.querySelector('.modal-content');
-            
-            modalContent.classList.remove('success-modal', 'error-modal');
-            if (type === 'success') {
-                modalContent.classList.add('success-modal');
-            } else if (type === 'error') {
-                modalContent.classList.add('error-modal');
-            }
-            
-            document.getElementById('messageModalTitle').textContent = title;
-            document.getElementById('messageModalContent').textContent = message;
-            modal.style.display = 'block';
-            
-            const closeBtn = modal.querySelector('.close');
-            closeBtn.onclick = () => closeMessageModal();
-            
-            window.onclick = (event) => {
-                if (event.target === modal) {
-                    closeMessageModal();
-                }
-            };
-        }
-
-        function closeMessageModal() {
-            document.getElementById('messageModal').style.display = 'none';
-        }
-
-        // Add event listener for the request login button
-        document.getElementById('requestLogin').addEventListener('click', async () => {
-            try {
-                const response = await fetch('login.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: 'request_login=1',
-                    credentials: 'same-origin'
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showMessageModal('Success', data.message, 'success');
-                } else {
-                    showMessageModal('Error', data.error, 'error');
-                }
-            } catch (error) {
-                console.error('Request failed:', error);
-                showMessageModal('Error', 'Failed to request login link. Please try again.', 'error');
-            }
-        });
-
-        // Check if there's a token in the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
+    <script type="module">
+        import { MessageModal, LoginHandler } from './js/ui.js';
         
-        if (token) {
-            fetch('admin.php?op=verify', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ token }),
-                credentials: 'same-origin'
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success && data.sessionToken) {
-                    sessionStorage.setItem('adminToken', data.sessionToken);
-                    window.location.replace('index.php');
-                } else {
-                    throw new Error(data.error || 'Invalid or expired login link');
-                }
-            })
-            .catch(error => {
-                console.error('Login error:', error);
-                showMessageModal('Error', error.message || 'Login failed. Please request a new login link.', 'error');
-            });
-        }
+        // Initialize the login handler
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoginHandler();
+        });
     </script>
 </body>
 </html> 

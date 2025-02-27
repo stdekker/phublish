@@ -1,10 +1,13 @@
 <?php
 require_once '../../vendor/autoload.php';
 
-use Phublish\Admin\Auth;
+use Phublish\Admin\Security;
 use Symfony\Component\Yaml\Yaml;
 
-// Load blog configuration
+// Perform security checks - regular page that requires authentication
+Security::securityCheck(true, false);
+
+// Load blog configuration for template variables
 $configPath = dirname(__DIR__, 2) . '/config/blog.yaml';
 $config = Yaml::parseFile($configPath);
 
@@ -49,21 +52,6 @@ else {
     header("Access-Control-Allow-Origin: $origin");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, X-Admin-Token, X-Requested-With");
-}
-
-// Check authentication and redirect if not authenticated
-if (!Auth::checkAuth()) {
-    // Check if this is an AJAX request
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-        http_response_code(401);
-        header('Content-Type: application/json');
-        echo json_encode(['error' => 'Unauthorized', 'code' => 401]);
-        exit;
-    }
-    // For regular requests, redirect to login page
-    header('Location: login.php');
-    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -115,17 +103,24 @@ if (!Auth::checkAuth()) {
         </div>
     </div>
 
-    <!-- File Modal -->
+    <!-- Post file selection modal -->
     <div id="fileModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Select File</h2>
+                <h2>Select post md file</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <select id="fileSelector" size="10">
-                    <!-- Options will be populated dynamically -->
-                </select>
+                <div class="file-list-container">
+                    <div class="file-table-header">
+                        <div class="file-name-col">Filename</div>
+                        <div class="file-title-col">Title</div>
+                        <div class="file-date-col">Created Date</div>
+                    </div>
+                    <ul id="fileList" class="file-table">
+                        <!-- Post files will be populated dynamically -->
+                    </ul>
+                </div>
             </div>
             <div class="modal-footer">
                 <button id="selectFileButton">Open</button>

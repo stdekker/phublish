@@ -4,16 +4,10 @@ ini_set('display_errors', 1);
 
 require_once '../../vendor/autoload.php';
 
-use Phublish\Admin\Auth;
-use Symfony\Component\Yaml\Yaml;
+use Phublish\Admin\Security;
 
-// Check authentication
-if (!Auth::checkAuth()) {
-    http_response_code(401);
-    header('Content-Type: application/json');
-    echo json_encode(['error' => 'Unauthorized', 'code' => 401]);
-    exit;
-}
+// Perform security checks - this is an API endpoint that requires authentication
+Security::securityCheck(true, true);
 
 $uploadDir = dirname(__DIR__, 2) . '/web/uploads/';
 
@@ -26,6 +20,41 @@ if (!is_dir($uploadDir)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check if this is a delete action
+    if (isset($_POST['action']) && $_POST['action'] === 'delete') {
+        error_log("Delete action received: " . print_r($_POST, true));
+        $fileName = $_POST['file'] ?? '';
+        
+        if (empty($fileName)) {
+            error_log("No filename provided for deletion");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'No filename provided']);
+            exit;
+        }
+        
+        $targetFile = $uploadDir . basename($fileName);
+        error_log("Attempting to delete file: $targetFile");
+        
+        if (!file_exists($targetFile)) {
+            error_log("File does not exist: $targetFile");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'File does not exist']);
+            exit;
+        }
+        
+        if (unlink($targetFile)) {
+            error_log("File deleted successfully: $targetFile");
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true]);
+        } else {
+            error_log("Failed to delete file: $targetFile - " . error_get_last()['message']);
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => 'Failed to delete file: ' . error_get_last()['message']]);
+        }
+        exit;
+    }
+    
+    // Handle file upload
     if (!isset($_FILES['file'])) {
         echo json_encode(['success' => false, 'error' => 'No file uploaded']);
         exit;
@@ -71,11 +100,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     parse_str(file_get_contents("php://input"), $data);
     $fileName = $data['file'] ?? '';
+    
+    if (empty($fileName)) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'error' => 'No filename provided']);
+        exit;
+    }
+    
     $targetFile = $uploadDir . basename($fileName);
-
+    error_log("Attempting to delete file: $targetFile");
+    
     if (file_exists($targetFile) && unlink($targetFile)) {
+        header('Content-Type: application/json');
         echo json_encode(['success' => true]);
     } else {
+        header('Content-Type: application/json');
         echo json_encode(['success' => false, 'error' => 'Failed to delete file']);
     }
     exit;

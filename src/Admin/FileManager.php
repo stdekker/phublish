@@ -15,7 +15,45 @@ class FileManager {
             throw new \Exception("Failed to scan directory");
         }
         
-        return array_values(array_diff($files, array('.', '..')));
+        $fileList = array_diff($files, array('.', '..'));
+        $result = [];
+        
+        foreach ($fileList as $filename) {
+            $filePath = $path . $filename;
+            
+            // Skip directories
+            if (is_dir($filePath)) {
+                continue;
+            }
+            
+            // Get file creation time
+            $creationTime = filectime($filePath);
+            
+            // Get file content to extract metadata
+            $content = file_get_contents($filePath);
+            $title = '';
+            
+            // Extract title from markdown frontmatter
+            if ($content !== false) {
+                if (preg_match('/---[\s\S]*?title:\s*(.*?)[\r\n][\s\S]*?---/i', $content, $matches)) {
+                    $title = trim($matches[1]);
+                }
+            }
+            
+            $result[] = [
+                'filename' => $filename,
+                'title' => $title,
+                'created' => $creationTime,
+                'createdDate' => date('Y-m-d H:i:s', $creationTime)
+            ];
+        }
+        
+        // Sort by creation date (newest first)
+        usort($result, function($a, $b) {
+            return $b['created'] - $a['created'];
+        });
+        
+        return $result;
     }
     
     public static function readFile(string $filename): ?string {

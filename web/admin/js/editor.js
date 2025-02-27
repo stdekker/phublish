@@ -47,14 +47,24 @@ class Editor {
 
         // Filename handling
         const filenameInput = document.getElementById('currentFileName');
+        filenameInput.addEventListener('focus', (e) => {
+            // Remove .md extension when user starts editing
+            let value = e.target.value;
+            if (value.toLowerCase().endsWith('.md')) {
+                e.target.value = value.slice(0, -3);
+            }
+        });
+
         filenameInput.addEventListener('blur', (e) => {
+            // Format the filename and ensure it has .md extension when user finishes editing
             let value = formatSlug(e.target.value);
-            if (!value.endsWith('.md')) {
+            if (!value.toLowerCase().endsWith('.md')) {
                 value += '.md';
             }
             e.target.value = value;
             this.validateField('filename', value);
         });
+
         filenameInput.addEventListener('input', () => this.clearFieldError('filename'));
 
         // Button handlers
@@ -107,7 +117,7 @@ class Editor {
         if (fieldId === 'filename') {
             if (!value) {
                 error = 'Filename is required';
-            } else if (!value.endsWith('.md')) {
+            } else if (!value.toLowerCase().endsWith('.md')) {
                 error = 'Filename must end with .md';
             } else if (!/^[a-z0-9-]+\.md$/.test(value)) {
                 error = 'Filename can only contain lowercase letters, numbers, and hyphens';
@@ -192,14 +202,10 @@ class Editor {
             const result = await API.writeFile(newFileName, fullContent);
             if (result.success) {
                 showSuccessMessage('File saved successfully!', result.postUrl);
+                
+                // Reload the files list to update with the new file
                 if (!currentFile || currentFile !== newFileName) {
                     await this.loadFiles();
-                    // Select the new file in the file selector
-                    Array.from(this.fileModal.fileSelector.options).forEach((option, index) => {
-                        if (option.value === newFileName) {
-                            this.fileModal.fileSelector.selectedIndex = index;
-                        }
-                    });
                 }
             } else {
                 throw new Error(result.error || 'Failed to save file');
@@ -221,7 +227,8 @@ class Editor {
         document.getElementById('draft').checked = false;
         this.editor.setMarkdown('');
         document.getElementById('currentFileName').value = 'new-post.md';
-        this.fileModal.fileSelector.value = '';
+        // Clear the selected file in the file modal
+        this.fileModal.selectedFile = null;
     }
 
     async handleFileSelect() {
@@ -235,7 +242,10 @@ class Editor {
             document.getElementById('date').value = metadata.date || '';
             document.getElementById('draft').checked = metadata.status === 'draft';
             this.editor.setMarkdown(metadata.content || '');
+            
+            // Set the filename in the input field
             document.getElementById('currentFileName').value = fileName;
+            
             this.fileModal.close();
         } catch (error) {
             console.error('Error loading file:', error);

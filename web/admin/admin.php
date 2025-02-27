@@ -2,14 +2,17 @@
 require_once '../../vendor/autoload.php';
 
 use Phublish\Admin\Auth;
+use Phublish\Admin\Security;
 use Phublish\Admin\AdminController;
 use Symfony\Component\Yaml\Yaml;
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Perform security checks first - this is an API endpoint
+// The 'verify' operation doesn't require authentication
+$operation = $_GET['op'] ?? '';
+$requireAuth = ($operation !== 'verify');
+Security::securityCheck($requireAuth, true);
 
-// Load blog configuration
+// Load blog configuration for use in operations
 $configPath = dirname(__DIR__, 2) . '/config/blog.yaml';
 $config = Yaml::parseFile($configPath);
 
@@ -46,18 +49,6 @@ if ($origin) {
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
-}
-
-// Check authentication first for all operations except verify
-$operation = $_GET['op'] ?? '';
-if ($operation !== 'verify' && !Auth::checkAuth()) {
-    http_response_code(401);
-    header('Content-Type: application/json');
-    echo json_encode([
-        'error' => 'Unauthorized',
-        'code' => 401
-    ]);
-    exit;
 }
 
 $controller = new AdminController();
