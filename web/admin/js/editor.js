@@ -1,16 +1,14 @@
 import API from './api.js';
 import { formatSlug, extractMetadata, formatMetadata, validatePost } from './utils.js';
 import { 
-    MessageModal, 
-    FileModal, 
-    DeleteModal, 
-    UploadsManagerModal,
     showError,
     clearErrors,
     showSuccessMessage,
     updateCurrentFileName,
     showContextMenu
 } from './ui.js';
+import ModalManager from './ModalManager.js';
+import UploadsManager from './UploadsManager.js';
 
 class Editor {
     constructor() {
@@ -28,10 +26,10 @@ class Editor {
                 ['scrollSync']
             ]
         });
-        this.messageModal = new MessageModal();
-        this.fileModal = new FileModal();
-        this.deleteModal = new DeleteModal();
-        this.uploadsManagerModal = new UploadsManagerModal(this.editor);
+        
+        // Use ModalManager instead of directly instantiating modals
+        this.selectedFile = null;
+        this.uploadsManager = new UploadsManager(this.editor);
         
         this.setupEventListeners();
         this.initialize();
@@ -83,8 +81,7 @@ class Editor {
 
         // Add event listener for the manage files button
         document.getElementById('manageFilesButton').addEventListener('click', () => {
-            this.uploadsManagerModal.show();
-            this.uploadsManagerModal.loadFiles();
+            this.handleManageFiles();
         });
     }
 
@@ -96,9 +93,8 @@ class Editor {
     async loadFiles() {
         try {
             const files = await API.listFiles();
-            if (files) {
-                this.fileModal.updateFiles(files);
-            }
+            // Store files for later use instead of updating a FileModal instance
+            this.files = files || [];
         } catch (error) {
             console.error('Error loading files:', error);
             showError('save', error.message || 'Failed to load files');
@@ -184,7 +180,7 @@ class Editor {
         const fullContent = formatMetadata(metadata, content);
         
         try {
-            const currentFile = this.fileModal.getSelectedFile();
+            const currentFile = this.selectedFile;
             
             // If it's a new file or filename has changed
             if (!currentFile || currentFile !== newFileName) {
@@ -217,8 +213,68 @@ class Editor {
     }
 
     handleOpenFile() {
-        this.loadFiles();
-        this.fileModal.show();
+        this.loadFiles().then(() => {
+            // Use ModalManager.fileSelect instead of the old FileModal
+            ModalManager.fileSelect(
+                'Select Post', 
+                this.files,
+                // onSelect callback
+                (filename) => {
+                    this.selectedFile = filename;
+                    this.loadFileContent(filename);
+                },
+                // onDelete callback
+                (filename) => {
+                    this.confirmDeleteFile(filename);
+                }
+            );
+        });
+    }
+
+    async loadFileContent(fileName) {
+        if (!fileName) return;
+        
+        try {
+            const content = await API.readFile(fileName);
+            const metadata = extractMetadata(content);
+            document.getElementById('title').value = metadata.title || '';
+            document.getElementById('date').value = metadata.date || '';
+            document.getElementById('draft').checked = metadata.status === 'draft';
+            this.editor.setMarkdown(metadata.content || '');
+            
+            // Set the filename in the input field
+            document.getElementById('currentFileName').value = fileName;
+        } catch (error) {
+            console.error('Error loading file:', error);
+            showError('save', error.message || 'Failed to load file');
+        }
+    }
+
+    confirmDeleteFile(fileName) {
+        if (!fileName) {
+            ModalManager.alert('Error', 'No file selected to delete', 'error');
+            return;
+        }
+
+        ModalManager.dangerConfirm(
+            'Confirm Delete',
+            `Are you sure you want to delete "${fileName}"? This action cannot be undone.`,
+            async () => {
+                try {
+                    const result = await API.deleteFile(fileName);
+                    if (result.success) {
+                        showSuccessMessage('File deleted successfully');
+                        this.handleNewFile();
+                        await this.loadFiles();
+                    } else {
+                        throw new Error(result.error || 'Failed to delete file');
+                    }
+                } catch (error) {
+                    console.error('Error deleting file:', error);
+                    showError('save', error.message || 'Failed to delete file');
+                }
+            }
+        );
     }
 
     handleNewFile() {
@@ -227,8 +283,7 @@ class Editor {
         document.getElementById('draft').checked = false;
         this.editor.setMarkdown('');
         document.getElementById('currentFileName').value = 'new-post.md';
-        // Clear the selected file in the file modal
-        this.fileModal.selectedFile = null;
+        this.selectedFile = null; // Store selected file in the Editor instance instead
     }
 
     async handleFileSelect() {
@@ -253,46 +308,27 @@ class Editor {
         }
     }
 
-    async handleDelete() {
-        const fileName = this.fileModal.getSelectedFile();
-        if (!fileName) {
-            this.messageModal.show('Error', 'No file selected to delete', 'error');
-            return;
-        }
-
-        this.deleteModal.show(fileName);
-        const confirmButton = document.getElementById('confirmDeleteButton');
-        const handleConfirm = async () => {
-            try {
-                const result = await API.deleteFile(fileName);
-                if (result.success) {
-                    showSuccessMessage('File deleted successfully');
-                    this.handleNewFile();
-                    await this.loadFiles();
-                } else {
-                    throw new Error(result.error || 'Failed to delete file');
+    async handleLogout() {
+        // Confirm before logging out
+        ModalManager.confirm(
+            'Confirm Logout',
+            'Are you sure you want to log out? Any unsaved changes will be lost.',
+            async () => {
+                try {
+                    const success = await API.logout();
+                    if (!success) {
+                        ModalManager.alert('Error', 'Logout failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error during logout:', error);
+                    ModalManager.alert('Error', 'Logout failed: ' + error.message, 'error');
                 }
-            } catch (error) {
-                console.error('Error deleting file:', error);
-                showError('save', error.message || 'Failed to delete file');
             }
-            this.deleteModal.close();
-            this.fileModal.close();
-            confirmButton.removeEventListener('click', handleConfirm);
-        };
-        confirmButton.addEventListener('click', handleConfirm);
+        );
     }
 
-    async handleLogout() {
-        try {
-            const success = await API.logout();
-            if (!success) {
-                this.messageModal.show('Error', 'Logout failed', 'error');
-            }
-        } catch (error) {
-            console.error('Error during logout:', error);
-            this.messageModal.show('Error', 'Logout failed: ' + error.message, 'error');
-        }
+    handleManageFiles() {
+        this.uploadsManager.show();
     }
 }
 

@@ -84,7 +84,7 @@ $sessionLifetimeMinutes = round($sessionLifetime / 60);
 
     <!-- Message Modal -->
     <div id="messageModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-type-info">
             <div class="modal-header">
                 <h2 id="messageModalTitle">Message</h2>
                 <span class="close">&times;</span>
@@ -99,7 +99,7 @@ $sessionLifetimeMinutes = round($sessionLifetime / 60);
     </div>
 
     <script type="module">
-        import { MessageModal, LoginHandler } from './js/ui.js';
+        import { LoginHandler } from './js/ui.js';
         
         // Initialize the login handler
         document.addEventListener('DOMContentLoaded', () => {

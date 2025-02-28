@@ -105,7 +105,7 @@ else {
 
     <!-- Post file selection modal -->
     <div id="fileModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-type-default">
             <div class="modal-header">
                 <h2>Select post md file</h2>
                 <span class="close">&times;</span>
@@ -123,7 +123,7 @@ else {
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="selectFileButton">Open</button>
+                <button id="selectFileButton" class="action-button">Open</button>
                 <button id="modalDeleteButton" class="danger-button">Delete</button>
                 <button class="cancel-button">Cancel</button>
             </div>
@@ -132,7 +132,7 @@ else {
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-type-confirm">
             <div class="modal-header">
                 <h2>Confirm Delete</h2>
                 <span class="close">&times;</span>
@@ -150,7 +150,7 @@ else {
 
     <!-- Message Modal -->
     <div id="messageModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-type-info">
             <div class="modal-header">
                 <h2 id="messageModalTitle">Message</h2>
                 <span class="close">&times;</span>
@@ -166,14 +166,14 @@ else {
 
     <!-- Add this modal for file management -->
     <div id="uploadsManagerModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-type-default">
             <div class="modal-header">
                 <h2>Manage Uploads</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
                 <input type="file" id="fileUploadInput" />
-                <button id="uploadFileButton">Upload</button>
+                <button id="uploadFileButton" class="action-button">Upload</button>
                 <div class="file-list-container">
                     <ul id="fileList"></ul>
                 </div>

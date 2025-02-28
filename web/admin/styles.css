@@ -178,6 +178,7 @@ select {
     gap: 10px;
 }
 
+/* Unified Modal System Styles */
 .modal {
     display: none;
     position: fixed;
@@ -187,6 +188,7 @@ select {
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
+    overflow-y: auto;
 }
 
 .modal-content {
@@ -198,34 +200,9 @@ select {
     max-width: 600px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: modalFadeIn 0.3s;
-}
-
-@keyframes modalFadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.success-modal .modal-header {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.error-modal .modal-header {
-    background-color: #dc3545;
-    color: white;
-}
-
-.action-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.action-button:hover {
-    background-color: #45a049;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s, transform 0.3s;
 }
 
 .modal-header {
@@ -234,15 +211,20 @@ select {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #2a2e44; /* Default header color */
+    color: white;
 }
 
 .modal-header h2 {
     margin: 0;
     font-size: 20px;
+    font-weight: 500;
 }
 
 .modal-body {
     padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
 }
 
 .modal-footer {
@@ -254,29 +236,326 @@ select {
 }
 
 .close {
-    color: #aaa;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    transition: color 0.2s;
 }
 
 .close:hover {
-    color: #555;
+    color: #fff;
 }
 
+/* Modal type variations */
+.modal-type-default .modal-header,
+#fileModal .modal-header,
+#uploadsManagerModal .modal-header {
+    background-color: #2a2e44;
+    color: white;
+}
+
+.modal-type-confirm .modal-header,
+#deleteModal .modal-header {
+    background-color: #4a5568;
+    color: white;
+}
+
+.modal-type-info .modal-header {
+    background-color: #3182ce;
+    color: white;
+}
+
+.modal-type-success .modal-header,
+.success-modal .modal-header {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modal-type-error .modal-header,
+.error-modal .modal-header {
+    background-color: #dc3545;
+    color: white;
+}
+
+.modal-type-warning .modal-header {
+    background-color: #e3a008;
+    color: white;
+}
+
+/* Modal content elements */
+.modal-message,
+.modal-body p {
+    font-size: 1.1em;
+    line-height: 1.5;
+    margin-bottom: 1em;
+}
+
+.modal-input-container {
+    margin-bottom: 15px;
+}
+
+.modal-input,
+.modal-body input[type="text"],
+.modal-body input[type="date"],
+.modal-body input[type="email"],
+.modal-body input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.modal-input-error {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
+}
+
+/* Button styles */
+.action-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #45a049;
+}
+
+.action-button.primary {
+    background-color: #4CAF50;
+}
+
+.action-button.secondary {
+    background-color: #3182ce;
+}
+
+.action-button.tertiary {
+    background-color: #6c757d;
+}
+
+.cancel-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268;
+}
+
+.danger-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.danger-button:hover {
+    background-color: #c82333;
+}
+
+button:disabled,
+.action-button:disabled,
+.danger-button:disabled,
+.cancel-button:disabled,
+#addToEditorButton:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+/* File list styles */
+.file-list-container {
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    max-height: 300px;
+}
+
+.file-table-header {
+    display: flex;
+    background-color: #f5f5f5;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+}
+
+.file-table {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.file-table li,
+.file-item {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.file-table li:hover,
+.file-item:hover:not(.header) {
+    background-color: #f9f9f9;
+}
+
+.file-table li.selected,
+.file-item.selected:not(.header) {
+    background-color: #e8f5e9;
+}
+
+.file-name-col {
+    flex: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
+    font-weight: 500;
+    color: #333;
+}
+
+.file-title-col {
+    flex: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
+}
+
+.file-date-col {
+    flex: 1;
+    text-align: right;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.file-actions-col {
+    width: 40px;
+    text-align: center;
+}
+
+/* Delete button styling */
+.delete-button {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 4px 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Circular delete button style */
+.delete-button.circular {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 2px solid #dc3545;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-button:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-button.circular:hover {
+    transform: scale(1.1);
+}
+
+/* Animation keyframes */
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalSlideInTop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes modalSlideInRight {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes modalSlideInBottom {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Loading indicator */
+.modal-loader {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer button {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Remove duplicate styles */
 #fileSelector {
     width: 100%;
     height: 300px;
     border: 1px solid #ddd;
     border-radius: 4px;
-}
-
-.cancel-button {
-    background-color: #6c757d;
-}
-
-.cancel-button:hover {
-    background-color: #5a6268;
 }
 
 .view-post-link {
@@ -305,22 +584,6 @@ select {
     border-radius: 4px;
     margin-top: 10px;
     word-break: break-all;
-}
-
-.modal-body p {
-    margin: 0 0 10px 0;
-    line-height: 1.5;
-}
-
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.danger-button:disabled {
-    background-color: #dc3545;
-    opacity: 0.5;
 }
 
 .current-file {
@@ -409,22 +672,6 @@ button:disabled {
     color: #aaa;
 }
 
-.delete-button {
-    background-color: transparent;
-    border: 1px solid red;
-    color: red;
-    padding: 2px 5px;
-    font-size: 0.8em;
-    cursor: pointer;
-    border-radius: 3px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.delete-button:hover {
-    background-color: red;
-    color: white;
-}
-
 /* File Manager Styles */
 .file-manager {
     padding: 15px;
@@ -466,22 +713,7 @@ button:disabled {
     color: #333;
 }
 
-.file-manager .delete-button {
-    background-color: transparent;
-    border: 1px solid red;
-    color: red;
-    padding: 4px 8px;
-    font-size: 0.8em;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.file-manager .delete-button:hover {
-    background-color: red;
-    color: white;
-}
-
+/* File manager header */
 .file-manager-header {
     display: flex;
     justify-content: space-between;
@@ -513,10 +745,6 @@ button:disabled {
 #uploadsManagerModal .modal-content {
     max-width: 800px;
     width: 90%;
-}
-
-#uploadsManagerModal .modal-body {
-    padding: 20px;
 }
 
 #fileUploadInput {
@@ -609,179 +837,102 @@ button:disabled {
     transform: scale(1.1);
 }
 
-/* File list container with fixed header */
-.file-list-container {
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    max-height: 300px;
-    overflow-y: auto;
-    position: relative; /* For proper positioning of sticky elements */
+/* File Modal Styles */
+#fileModal .modal-content {
+    max-width: 800px;
 }
 
-#fileList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-}
-
-/* Fixed header */
-.file-item.header {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid #dee2e6;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.file-item:last-child {
-    border-bottom: none;
-}
-
-.file-item:hover:not(.header) {
-    background-color: #f8f9fa;
-}
-
-.file-item.selected:not(.header) {
-    background-color: #e8f5e9;
-}
-
-.file-name-col {
-    font-weight: 500;
-    color: #333;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.file-date-col {
-    color: #666;
-    font-size: 0.9em;
-    text-align: center;
-}
-
-.file-actions-col {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.delete-button {
-    background-color: white;
-    color: #dc3545;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 2px solid #dc3545;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 20px;
-    line-height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 100;
-}
-
-.delete-button:hover {
+#modalDeleteButton:disabled {
     background-color: #dc3545;
-    color: white;
-    transform: scale(1.1);
-}
-
-/* Ensure the button is always clickable */
-.delete-button,
-.file-actions-col {
-    pointer-events: auto !important;
-}
-
-/* Remove any existing pointer-events: none */
-.file-item * {
-    pointer-events: auto;
-}
-
-#addToEditorButton:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* File Table Styles */
-.file-table-header {
-    display: grid;
-    grid-template-columns: 1.5fr 2fr 1fr;
-    gap: 10px;
-    padding: 10px 15px;
-    border-bottom: 2px solid #dee2e6;
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #495057;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+/* Custom animation for different types of modals */
+.info-modal .modal-content {
+    animation: modalSlideInTop 0.3s;
 }
 
-.file-table {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 300px;
-    overflow-y: auto;
+.success-modal .modal-content {
+    animation: modalSlideInRight 0.3s;
 }
 
-.file-table li {
-    display: grid;
-    grid-template-columns: 1.5fr 2fr 1fr;
-    gap: 10px;
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
+.error-modal .modal-content {
+    animation: modalSlideInBottom 0.3s;
+}
+
+/* File List */
+.modal .file-item {
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.file-table li:hover {
-    background-color: #f1f1f1;
+.modal .file-item:hover {
+    background-color: #f5f5f5;
 }
 
-.file-table li.selected {
+.modal .file-item.selected {
     background-color: #e8f5e9;
+    border-left: 3px solid #4CAF50;
 }
 
-.file-title-col {
-    font-weight: 500;
-    color: #333;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* Loader for async operations */
+.modal-loader {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
 }
 
-.file-date-col {
-    color: #666;
-    font-size: 0.9em;
-    text-align: right;
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
-.file-list-container {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
-    background-color: #fff;
-    margin-bottom: 10px;
-    height: 300px;
-    overflow-y: auto;
+/* Custom animation for different types of modals */
+.info-modal .modal-content {
+    animation: modalSlideInTop 0.3s;
 }
 
-/* File List Modal Specific */
-#fileModal .modal-content {
-    max-width: 800px;
-    width: 90%;
+.success-modal .modal-content {
+    animation: modalSlideInRight 0.3s;
 }
 
-#modalDeleteButton:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.error-modal .modal-content {
+    animation: modalSlideInBottom 0.3s;
+}
+
+@keyframes modalSlideInTop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes modalSlideInRight {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes modalSlideInBottom {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer button {
+        width: 100%;
+        margin-bottom: 8px;
+    }
 } 
