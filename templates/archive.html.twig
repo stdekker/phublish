@@ -8,7 +8,7 @@
     <ul class="archive-list">
         {% for post in posts %}
             <li class="archive-item">
-                <a href="/posts/{{ post.slug }}.html">{{ post.title }}</a> - <time datetime="{{ post.date }}">{{ post.formatted_date }}</time>
+                <a href="/{{ post.slug }}">{{ post.title }}</a> - <time datetime="{{ post.date }}">{{ post.formatted_date }}</time>
             </li>
         {% endfor %}
     </ul>
