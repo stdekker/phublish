@@ -85,8 +85,8 @@ class FileManager {
     public static function createFile(string $filename): bool {
         $file = Config::getContentPath() . basename($filename);
         if (file_exists($file)) {
-            error_log("File already exists: " . $file);
-            return false;
+            error_log("File already exists: " . $file . " - returning true for idempotent operation");
+            return true; // Return true for idempotent operation - file exists is success
         }
         
         $result = file_put_contents($file, '');

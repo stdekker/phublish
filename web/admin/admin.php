@@ -143,6 +143,14 @@ try {
             echo json_encode(['success' => true]);
             break;
             
+        case 'checkSession':
+            error_log("Checking session status");
+            header('Content-Type: application/json');
+            // This will automatically check auth via Security::securityCheck
+            // If we reach here, session is valid
+            echo json_encode(['success' => true, 'sessionValid' => true]);
+            break;
+            
         case 'delete':
             $data = json_decode(file_get_contents('php://input'), true);
             error_log("Deleting file: " . ($data['file'] ?? 'no file specified'));
