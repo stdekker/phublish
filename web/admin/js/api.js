@@ -105,6 +105,19 @@ const API = {
             window.location.replace('login.php');
         }
         return response.ok;
+    },
+
+    async checkSession() {
+        try {
+            const response = await this.fetchWithAuth('admin.php?op=checkSession');
+            if (response.ok) {
+                const result = await response.json();
+                return result.sessionValid;
+            }
+            return false;
+        } catch (error) {
+            return false;
+        }
     }
 };
 

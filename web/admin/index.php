@@ -98,6 +98,7 @@ else {
             <button id="saveButton">Save post</button>
             <button id="openFileButton">Open post</button>
             <button id="newFileButton">New post</button>
+            <button id="deleteButton" class="danger-button" disabled>Delete post</button>
             <button id="manageFilesButton">Manage Uploads</button>
             <span class="error-message" id="save-error"></span>
         </div>

@@ -70,6 +70,7 @@ class Editor {
             'saveButton': 'handleSave',
             'openFileButton': 'handleOpenFile', 
             'newFileButton': 'handleNewFile',
+            'deleteButton': 'handleDeleteCurrentFile',
             'logoutButton': 'handleLogout',
             'modalDeleteButton': 'handleDelete',
             'selectFileButton': 'handleFileSelect'
@@ -88,6 +89,7 @@ class Editor {
     initialize() {
         this.loadFiles();
         updateCurrentFileName('new-post.md');
+        this.updateDeleteButtonState(); // Initially disable delete button since no file is loaded
     }
 
     async loadFiles() {
@@ -176,28 +178,53 @@ class Editor {
             return;
         }
 
+        // Check session before attempting to save to prevent data loss
+        const sessionValid = await API.checkSession();
+        if (!sessionValid) {
+            const content = this.editor.getMarkdown();
+            const fullContent = formatMetadata(metadata, content);
+            
+            ModalManager.confirm(
+                'Session Expired',
+                'Your session has expired. Would you like to copy your content to the clipboard before redirecting to login?',
+                () => {
+                    // Copy content to clipboard
+                    navigator.clipboard.writeText(fullContent).then(() => {
+                        ModalManager.alert('Content Copied', 'Your content has been copied to the clipboard. You can paste it after logging in again.', 'info', () => {
+                            window.location.replace('login.php');
+                        });
+                    }).catch(() => {
+                        ModalManager.alert('Session Expired', 'Your session has expired. Please save your content manually and then log in again.', 'warning', () => {
+                            window.location.replace('login.php');
+                        });
+                    });
+                },
+                () => {
+                    window.location.replace('login.php');
+                }
+            );
+            return;
+        }
+
         const content = this.editor.getMarkdown();
         const fullContent = formatMetadata(metadata, content);
         
         try {
             const currentFile = this.selectedFile;
             
-            // If it's a new file or filename has changed
-            if (!currentFile || currentFile !== newFileName) {
-                const created = await API.createFile(newFileName);
-                if (!created) {
-                    throw new Error('Failed to create new file');
-                }
-                
+            // Try to write the file directly - writeFile can handle both new and existing files
+            const result = await API.writeFile(newFileName, fullContent);
+            if (result.success) {
                 // If we're renaming an existing file, delete the old one after successful save
                 if (currentFile && currentFile !== newFileName) {
                     await API.deleteFile(currentFile);
                 }
-            }
-
-            const result = await API.writeFile(newFileName, fullContent);
-            if (result.success) {
+                
                 showSuccessMessage('File saved successfully!', result.postUrl);
+                
+                // Update selectedFile to track the current file being worked on
+                this.selectedFile = newFileName;
+                this.updateDeleteButtonState();
                 
                 // Reload the files list to update with the new file
                 if (!currentFile || currentFile !== newFileName) {
@@ -214,7 +241,7 @@ class Editor {
 
     handleOpenFile() {
         this.loadFiles().then(() => {
-            // Use ModalManager.fileSelect instead of the old FileModal
+            // Use ModalManager.fileSelect without delete functionality
             ModalManager.fileSelect(
                 'Select Post', 
                 this.files,
@@ -222,11 +249,9 @@ class Editor {
                 (filename) => {
                     this.selectedFile = filename;
                     this.loadFileContent(filename);
-                },
-                // onDelete callback
-                (filename) => {
-                    this.confirmDeleteFile(filename);
+                    this.updateDeleteButtonState();
                 }
+                // No onDelete callback - delete functionality moved to main edit window
             );
         });
     }
@@ -244,6 +269,8 @@ class Editor {
             
             // Set the filename in the input field
             document.getElementById('currentFileName').value = fileName;
+            this.selectedFile = fileName;
+            this.updateDeleteButtonState();
         } catch (error) {
             console.error('Error loading file:', error);
             showError('save', error.message || 'Failed to load file');
@@ -277,6 +304,21 @@ class Editor {
         );
     }
 
+    handleDeleteCurrentFile() {
+        if (!this.selectedFile) {
+            ModalManager.alert('Error', 'No post is currently being edited', 'error');
+            return;
+        }
+        this.confirmDeleteFile(this.selectedFile);
+    }
+
+    updateDeleteButtonState() {
+        const deleteButton = document.getElementById('deleteButton');
+        if (deleteButton) {
+            deleteButton.disabled = !this.selectedFile;
+        }
+    }
+
     handleNewFile() {
         document.getElementById('title').value = '';
         document.getElementById('date').value = '';
@@ -284,6 +326,7 @@ class Editor {
         this.editor.setMarkdown('');
         document.getElementById('currentFileName').value = 'new-post.md';
         this.selectedFile = null; // Store selected file in the Editor instance instead
+        this.updateDeleteButtonState();
     }
 
     async handleFileSelect() {
