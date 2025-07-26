@@ -7,9 +7,9 @@ use Phublish\Admin\AdminController;
 use Symfony\Component\Yaml\Yaml;
 
 // Perform security checks first - this is an API endpoint
-// The 'verify' operation doesn't require authentication
+// The 'verify' and 'checkSession' operations don't require authentication
 $operation = $_GET['op'] ?? '';
-$requireAuth = ($operation !== 'verify');
+$requireAuth = !in_array($operation, ['verify', 'checkSession']);
 Security::securityCheck($requireAuth, true);
 
 // Load blog configuration for use in operations
@@ -146,9 +146,9 @@ try {
         case 'checkSession':
             error_log("Checking session status");
             header('Content-Type: application/json');
-            // This will automatically check auth via Security::securityCheck
-            // If we reach here, session is valid
-            echo json_encode(['success' => true, 'sessionValid' => true]);
+            // Manually check auth since this operation bypasses security check
+            $sessionValid = Auth::checkAuth();
+            echo json_encode(['success' => true, 'sessionValid' => $sessionValid]);
             break;
             
         case 'delete':

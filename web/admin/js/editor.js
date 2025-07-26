@@ -99,7 +99,13 @@ class Editor {
             this.files = files || [];
         } catch (error) {
             console.error('Error loading files:', error);
-            showError('save', error.message || 'Failed to load files');
+            if (error.message === 'Session expired') {
+                // Don't show error for session expiry during file loading
+                // The user will find out when they try to save
+                this.files = [];
+            } else {
+                showError('save', error.message || 'Failed to load files');
+            }
         }
     }
 
@@ -159,6 +165,14 @@ class Editor {
     }
 
     async handleSave() {
+        // Check session first before any other validation
+        const sessionValid = await API.checkSession();
+        if (!sessionValid) {
+            showError('save', 'Your session has expired. Please copy your content manually and log in again.');
+            this.disableSaveButton();
+            return;
+        }
+
         const metadata = this.getMetadata();
         
         // Only validate title and date
@@ -175,34 +189,6 @@ class Editor {
         const newFileName = document.getElementById('currentFileName').value;
         if (!newFileName) {
             showError('filename', 'Filename is required');
-            return;
-        }
-
-        // Check session before attempting to save to prevent data loss
-        const sessionValid = await API.checkSession();
-        if (!sessionValid) {
-            const content = this.editor.getMarkdown();
-            const fullContent = formatMetadata(metadata, content);
-            
-            ModalManager.confirm(
-                'Session Expired',
-                'Your session has expired. Would you like to copy your content to the clipboard before redirecting to login?',
-                () => {
-                    // Copy content to clipboard
-                    navigator.clipboard.writeText(fullContent).then(() => {
-                        ModalManager.alert('Content Copied', 'Your content has been copied to the clipboard. You can paste it after logging in again.', 'info', () => {
-                            window.location.replace('login.php');
-                        });
-                    }).catch(() => {
-                        ModalManager.alert('Session Expired', 'Your session has expired. Please save your content manually and then log in again.', 'warning', () => {
-                            window.location.replace('login.php');
-                        });
-                    });
-                },
-                () => {
-                    window.location.replace('login.php');
-                }
-            );
             return;
         }
 
@@ -235,7 +221,12 @@ class Editor {
             }
         } catch (error) {
             console.error('Error saving file:', error);
-            showError('save', error.message || 'Failed to save file');
+            if (error.message === 'Session expired') {
+                showError('save', 'Your session has expired. Please copy your content manually and log in again.');
+                this.disableSaveButton();
+            } else {
+                showError('save', error.message || 'Failed to save file');
+            }
         }
     }
 
@@ -298,7 +289,11 @@ class Editor {
                     }
                 } catch (error) {
                     console.error('Error deleting file:', error);
-                    showError('save', error.message || 'Failed to delete file');
+                    if (error.message === 'Session expired') {
+                        showError('save', 'Your session has expired. Please refresh the page and log in again.');
+                    } else {
+                        showError('save', error.message || 'Failed to delete file');
+                    }
                 }
             }
         );
@@ -316,6 +311,14 @@ class Editor {
         const deleteButton = document.getElementById('deleteButton');
         if (deleteButton) {
             deleteButton.disabled = !this.selectedFile;
+        }
+    }
+
+    disableSaveButton() {
+        const saveButton = document.getElementById('saveButton');
+        if (saveButton) {
+            saveButton.disabled = true;
+            saveButton.textContent = 'Session Expired';
         }
     }
 
