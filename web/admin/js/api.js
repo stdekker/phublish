@@ -11,18 +11,15 @@ const API = {
             headers,
             credentials: 'same-origin',
             mode: 'same-origin'
-        })
-        .then(response => {
-            if (response.status === 401) {
-                window.location.replace('login.php');
-                throw new Error('Unauthorized');
-            }
-            return response;
         });
+        // Removed automatic redirect on 401 - let calling code handle session expiry
     },
 
     async listFiles() {
         const response = await this.fetchWithAuth('admin.php?op=list');
+        if (response.status === 401) {
+            throw new Error('Session expired');
+        }
         if (!response.ok) {
             const err = await response.json();
             throw new Error(err.error || `HTTP error! status: ${response.status}`);
@@ -59,6 +56,9 @@ const API = {
             },
             body: JSON.stringify({ file: fileName, content })
         });
+        if (response.status === 401) {
+            throw new Error('Session expired');
+        }
         return response.json();
     },
 
@@ -81,6 +81,9 @@ const API = {
             },
             body: JSON.stringify({ file: fileName })
         });
+        if (response.status === 401) {
+            throw new Error('Session expired');
+        }
         return response.json();
     },
 
@@ -110,6 +113,10 @@ const API = {
     async checkSession() {
         try {
             const response = await this.fetchWithAuth('admin.php?op=checkSession');
+            if (response.status === 401) {
+                // Session is expired/invalid
+                return false;
+            }
             if (response.ok) {
                 const result = await response.json();
                 return result.sessionValid;
