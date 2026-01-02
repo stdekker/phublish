@@ -8,7 +8,7 @@ body {
     padding: 0 1rem 1rem 1rem;
 }
 
-main, header {
+main, header, footer {
     max-width: 72ch;
     margin: auto;
 }
@@ -19,6 +19,101 @@ article header h1 {
 
 article img {
     max-width: 100%;
+}
+
+/* Code block styles */
+/* Inline code */
+code:not(pre code) {
+    background-color: #2a2a2a;
+    color: #ff8080;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Code blocks */
+pre {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    line-height: 1.5;
+}
+
+article h1, article h2, article h3 {
+    color: #5c4947;
+    text-shadow: 4px 4px 16px rgba(0,0,0,.15)
+}
+
+#post-title {
+    color: #fff;
+}
+
+pre code {
+    background-color: transparent;
+    color: #e6e6e6;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.9em;
+    font-family: 'Courier New', Courier, monospace;
+    display: block;
+    white-space: pre;
+}
+
+/* Syntax highlighting colors for code blocks */
+pre code .keyword {
+    color: #c586c0;
+}
+
+pre code .string {
+    color: #ce9178;
+}
+
+pre code .comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+pre code .number {
+    color: #b5cea8;
+}
+
+pre code .function {
+    color: #dcdcaa;
+}
+
+pre code .variable {
+    color: #9cdcfe;
+}
+
+/* Scrollbar styling for code blocks */
+pre::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+    border: 1px solid #1a1a1a;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Firefox scrollbar styling */
+pre {
+    scrollbar-width: thin;
+    scrollbar-color: #444 #1a1a1a;
 }
 
 .skip-link {
@@ -55,6 +150,7 @@ a:hover {
 /* Header specific styles */
 header h1 {
     font-family: monospace;
+    font-size: 1.985rem;
 }
 
 header h1 a {
@@ -96,9 +192,12 @@ hr {
 }
 
 footer {
-    font-family: monospace;
-    font-size: 0.85em;
-    color: #666;
+    font-size: 0.85rem;
+    border-top: 1px solid #131313;
+    margin-top: 2.5rem;
+    padding: 1.25rem;
+    color: #4c4141;
+    text-align: center;
 }
 
 footer p {
