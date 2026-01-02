@@ -1,13 +1,139 @@
+/* CSS Custom Properties for Light Mode (default) */
+:root {
+    /* Background colors */
+    --bg-body: #f4f4f9;
+    --bg-container: #ffffff;
+    --bg-surface: #f5f5f5;
+    --bg-surface-hover: #f1f1f1;
+    --bg-surface-alt: #f9f9f9;
+    --bg-modal: #fefefe;
+    --bg-code: #f5f5f5;
+    --bg-selected: #e8f5e9;
+    --bg-header-row: #f8f9fa;
+    
+    /* Text colors */
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --text-muted: #6c757d;
+    --text-inverted: #ffffff;
+    
+    /* Border colors */
+    --border-color: #cccccc;
+    --border-light: #dddddd;
+    --border-lighter: #eeeeee;
+    --border-focus: #4CAF50;
+    
+    /* Primary brand colors */
+    --header-bg: #2a2e44;
+    --header-confirm-bg: #4a5568;
+    
+    /* Status colors */
+    --success-color: #4CAF50;
+    --success-hover: #45a049;
+    --success-bg: #e8f5e9;
+    --success-text: #2e7d32;
+    
+    --error-color: #dc3545;
+    --error-hover: #c82333;
+    --error-bg: #ffebee;
+    --error-text: #c62828;
+    
+    --info-color: #3182ce;
+    --warning-color: #e3a008;
+    
+    /* Button colors */
+    --btn-secondary-bg: #6c757d;
+    --btn-secondary-hover: #5a6268;
+    --btn-disabled-bg: #cccccc;
+    --btn-disabled-text: #666666;
+    
+    /* Shadows */
+    --shadow-container: rgba(0, 0, 0, 0.1);
+    --shadow-modal: rgba(0, 0, 0, 0.1);
+    --shadow-file-manager: rgba(0, 0, 0, 0.1);
+    
+    /* Modal overlay */
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+    
+    /* Links */
+    --link-color: #0066cc;
+    --link-hover: #003366;
+}
+
+/* Dark Mode - Respects User System Preference */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Background colors */
+        --bg-body: #0f1117;
+        --bg-container: #1a1d26;
+        --bg-surface: #252832;
+        --bg-surface-hover: #2d313d;
+        --bg-surface-alt: #1e2129;
+        --bg-modal: #1a1d26;
+        --bg-code: #252832;
+        --bg-selected: #1e3a2c;
+        --bg-header-row: #252832;
+        
+        /* Text colors */
+        --text-primary: #e4e6eb;
+        --text-secondary: #a8adb8;
+        --text-muted: #8b919d;
+        --text-inverted: #ffffff;
+        
+        /* Border colors */
+        --border-color: #3a3f4c;
+        --border-light: #2d313d;
+        --border-lighter: #252832;
+        --border-focus: #5cb85f;
+        
+        /* Primary brand colors */
+        --header-bg: #1a1d26;
+        --header-confirm-bg: #2d313d;
+        
+        /* Status colors */
+        --success-color: #316134;
+        --success-hover: #4cae4f;
+        --success-bg: #1e3a2c;
+        --success-text: #7fd182;
+        
+        --error-color: #452024;
+        --error-hover: #d43849;
+        --error-bg: #3a1d22;
+        --error-text: #f08e97;
+        
+        --info-color: #5c9ce6;
+        --warning-color: #f0b429;
+        
+        /* Button colors */
+        --btn-secondary-bg: #4a5568;
+        --btn-secondary-hover: #5a6478;
+        --btn-disabled-bg: #3a3f4c;
+        --btn-disabled-text: #6b7280;
+        
+        /* Shadows */
+        --shadow-container: rgba(0, 0, 0, 0.3);
+        --shadow-modal: rgba(0, 0, 0, 0.4);
+        --shadow-file-manager: rgba(0, 0, 0, 0.3);
+        
+        /* Modal overlay */
+        --modal-overlay: rgba(0, 0, 0, 0.7);
+        
+        /* Links */
+        --link-color: #6ca6ed;
+        --link-hover: #8fc0ff;
+    }
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: var(--bg-body);
+    color: var(--text-primary);
 }
 
 h1 {
-    color: white;
+    color: var(--text-inverted);
     margin: 0;
 }
 
@@ -15,8 +141,8 @@ h1 {
     max-width: 800px;
     margin: 30px auto;
     padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-container);
+    box-shadow: 0 0 10px var(--shadow-container);
     border-radius: 8px;
 }
 
@@ -32,9 +158,11 @@ textarea {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     box-sizing: border-box;
+    background-color: var(--bg-container);
+    color: var(--text-primary);
 }
 
 input[type="checkbox"] {
@@ -42,8 +170,8 @@ input[type="checkbox"] {
 }
 
 button {
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--success-color);
+    color: var(--text-inverted);
     padding: 10px 15px;
     margin-top: 10px;
     border: none;
@@ -53,35 +181,37 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--success-hover);
 }
 
 select {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     box-sizing: border-box;
+    background-color: var(--bg-container);
+    color: var(--text-primary);
 }
 
 .error {
-    background-color: #ffebee;
-    color: #c62828;
+    background-color: var(--error-bg);
+    color: var(--error-text);
     padding: 10px;
     border-radius: 4px;
     margin: 10px 0;
 }
 
 .error-message {
-    color: #c62828;
+    color: var(--error-text);
     font-size: 0.85em;
     margin-top: 4px;
     display: block;
 }
 
 .input-error {
-    border-color: #c62828 !important;
+    border-color: var(--error-text) !important;
 }
 
 .field-group {
@@ -129,8 +259,8 @@ select {
 }
 
 .message {
-    background-color: #e8f5e9;
-    color: #2e7d32;
+    background-color: var(--success-bg);
+    color: var(--success-text);
     padding: 15px;
     border-radius: 4px;
     margin: 10px 0;
@@ -143,15 +273,15 @@ select {
 }
 
 .danger-button {
-    background-color: #dc3545;
+    background-color: var(--error-color);
 }
 
 .danger-button:hover {
-    background-color: #c82333;
+    background-color: var(--error-hover);
 }
 
 .main-header {
-    background-color: #2a2e44;
+    background-color: var(--header-bg);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
@@ -162,7 +292,7 @@ select {
     margin: 0;
     padding: 0;
     background-color: transparent;
-    color: white;
+    color: var(--text-inverted);
     font-size: 18px;
 }
 
@@ -187,18 +317,18 @@ select {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: var(--modal-overlay);
     overflow-y: auto;
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: var(--bg-modal);
     margin: 10% auto;
     padding: 0;
     border-radius: 8px;
     width: 80%;
     max-width: 600px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--shadow-modal);
     animation: modalFadeIn 0.3s;
     opacity: 0;
     transform: translateY(-20px);
@@ -207,12 +337,12 @@ select {
 
 .modal-header {
     padding: 15px 20px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2a2e44; /* Default header color */
-    color: white;
+    background-color: var(--header-bg); /* Default header color */
+    color: var(--text-inverted);
 }
 
 .modal-header h2 {
@@ -225,11 +355,12 @@ select {
     padding: 20px;
     max-height: 70vh;
     overflow-y: auto;
+    color: var(--text-primary);
 }
 
 .modal-footer {
     padding: 15px 20px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--border-light);
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -251,36 +382,36 @@ select {
 .modal-type-default .modal-header,
 #fileModal .modal-header,
 #uploadsManagerModal .modal-header {
-    background-color: #2a2e44;
-    color: white;
+    background-color: var(--header-bg);
+    color: var(--text-inverted);
 }
 
 .modal-type-confirm .modal-header,
 #deleteModal .modal-header {
-    background-color: #4a5568;
-    color: white;
+    background-color: var(--header-confirm-bg);
+    color: var(--text-inverted);
 }
 
 .modal-type-info .modal-header {
-    background-color: #3182ce;
-    color: white;
+    background-color: var(--info-color);
+    color: var(--text-inverted);
 }
 
 .modal-type-success .modal-header,
 .success-modal .modal-header {
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--success-color);
+    color: var(--text-inverted);
 }
 
 .modal-type-error .modal-header,
 .error-modal .modal-header {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--error-color);
+    color: var(--text-inverted);
 }
 
 .modal-type-warning .modal-header {
-    background-color: #e3a008;
-    color: white;
+    background-color: var(--warning-color);
+    color: var(--text-inverted);
 }
 
 /* Modal content elements */
@@ -302,27 +433,29 @@ select {
 .modal-body input[type="password"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
     font-size: 16px;
     box-sizing: border-box;
+    background-color: var(--bg-container);
+    color: var(--text-primary);
 }
 
 .modal-input:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: var(--border-focus);
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 .modal-input-error {
-    border-color: #dc3545 !important;
+    border-color: var(--error-color) !important;
     box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
 }
 
 /* Button styles */
 .action-button {
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--success-color);
+    color: var(--text-inverted);
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -332,24 +465,24 @@ select {
 }
 
 .action-button:hover {
-    background-color: #45a049;
+    background-color: var(--success-hover);
 }
 
 .action-button.primary {
-    background-color: #4CAF50;
+    background-color: var(--success-color);
 }
 
 .action-button.secondary {
-    background-color: #3182ce;
+    background-color: var(--info-color);
 }
 
 .action-button.tertiary {
-    background-color: #6c757d;
+    background-color: var(--btn-secondary-bg);
 }
 
 .cancel-button {
-    background-color: #6c757d;
-    color: white;
+    background-color: var(--btn-secondary-bg);
+    color: var(--text-inverted);
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -359,12 +492,12 @@ select {
 }
 
 .cancel-button:hover {
-    background-color: #5a6268;
+    background-color: var(--btn-secondary-hover);
 }
 
 .danger-button {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--error-color);
+    color: var(--text-inverted);
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -374,7 +507,7 @@ select {
 }
 
 .danger-button:hover {
-    background-color: #c82333;
+    background-color: var(--error-hover);
 }
 
 button:disabled,
@@ -382,15 +515,15 @@ button:disabled,
 .danger-button:disabled,
 .cancel-button:disabled,
 #addToEditorButton:disabled {
-    background-color: #cccccc;
-    color: #666666;
+    background-color: var(--btn-disabled-bg);
+    color: var(--btn-disabled-text);
     cursor: not-allowed;
 }
 
 /* File list styles */
 .file-list-container {
     margin-top: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
     overflow: hidden;
     max-height: 300px;
@@ -398,10 +531,11 @@ button:disabled,
 
 .file-table-header {
     display: flex;
-    background-color: #f5f5f5;
+    background-color: var(--bg-surface);
     padding: 10px;
     font-weight: bold;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
 }
 
 .file-table {
@@ -416,18 +550,18 @@ button:disabled,
 .file-item {
     display: flex;
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-lighter);
     cursor: pointer;
 }
 
 .file-table li:hover,
 .file-item:hover:not(.header) {
-    background-color: #f9f9f9;
+    background-color: var(--bg-surface-alt);
 }
 
 .file-table li.selected,
 .file-item.selected:not(.header) {
-    background-color: #e8f5e9;
+    background-color: var(--bg-selected);
 }
 
 .file-name-col {
@@ -437,7 +571,7 @@ button:disabled,
     white-space: nowrap;
     padding-right: 10px;
     font-weight: 500;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .file-title-col {
@@ -446,12 +580,13 @@ button:disabled,
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-right: 10px;
+    color: var(--text-secondary);
 }
 
 .file-date-col {
     flex: 1;
     text-align: right;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9em;
 }
 
@@ -463,8 +598,8 @@ button:disabled,
 /* Delete button styling */
 .delete-button {
     background-color: transparent;
-    border: 1px solid #dc3545;
-    color: #dc3545;
+    border: 1px solid var(--error-color);
+    color: var(--error-color);
     padding: 4px 8px;
     font-size: 0.8em;
     cursor: pointer;
@@ -477,7 +612,7 @@ button:disabled,
     width: 24px;
     height: 24px;
     padding: 0;
-    border: 2px solid #dc3545;
+    border: 2px solid var(--error-color);
     border-radius: 50%;
     font-size: 20px;
     line-height: 20px;
@@ -487,8 +622,8 @@ button:disabled,
 }
 
 .delete-button:hover {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--error-color);
+    color: var(--text-inverted);
 }
 
 .delete-button.circular:hover {
@@ -554,14 +689,14 @@ button:disabled,
 #fileSelector {
     width: 100%;
     height: 300px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
 }
 
 .view-post-link {
     display: inline-block;
     margin-top: 10px;
-    color: #4CAF50;
+    color: var(--success-color);
     text-decoration: none;
     font-weight: bold;
 }
@@ -571,7 +706,7 @@ button:disabled,
 }
 
 .info {
-    color: #666;
+    color: var(--text-secondary);
     font-style: italic;
     margin-top: 20px;
     font-size: 0.9em;
@@ -579,41 +714,42 @@ button:disabled,
 
 .filename-display {
     font-family: monospace;
-    background-color: #f5f5f5;
+    background-color: var(--bg-code);
     padding: 8px;
     border-radius: 4px;
     margin-top: 10px;
     word-break: break-all;
+    color: var(--text-primary);
 }
 
 .current-file {
     margin: 10px 0;
     padding: 8px 12px;
-    background-color: #f8f9fa;
+    background-color: var(--bg-header-row);
     border-radius: 4px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-lighter);
 }
 
 .current-file-label {
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 0.9em;
     margin-right: 8px;
 }
 
 .current-file-name {
     font-family: monospace;
-    color: #495057;
+    color: var(--text-primary);
     font-weight: bold;
 }
 
 .current-file-name.clickable {
     cursor: pointer;
     text-decoration: underline;
-    color: #0066cc;
+    color: var(--link-color);
 }
 
 .current-file-name.clickable:hover {
-    color: #003366;
+    color: var(--link-hover);
 }
 
 /* Logout button styles */
@@ -647,7 +783,7 @@ button:disabled,
     padding: 0;
     margin: 10px 0;
     font-size: 0.9em;
-    color: #666;
+    color: var(--text-secondary);
 }
 
 .filename-rules li {
@@ -659,7 +795,7 @@ button:disabled,
     content: "•";
     position: absolute;
     left: 8px;
-    color: #4CAF50;
+    color: var(--success-color);
 }
 
 #newFileName {
@@ -669,7 +805,7 @@ button:disabled,
 }
 
 #newFileName::placeholder {
-    color: #aaa;
+    color: var(--text-muted);
 }
 
 /* File Manager Styles */
@@ -677,10 +813,10 @@ button:disabled,
     padding: 15px;
     max-height: 400px;
     overflow-y: auto;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-light);
     border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-surface-alt);
+    box-shadow: 0 2px 4px var(--shadow-file-manager);
 }
 
 .file-manager ul {
@@ -694,7 +830,7 @@ button:disabled,
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-lighter);
     transition: background-color 0.2s;
 }
 
@@ -703,14 +839,14 @@ button:disabled,
 }
 
 .file-manager li:hover {
-    background-color: #f1f1f1;
+    background-color: var(--bg-surface-hover);
 }
 
 .file-manager .file-info {
     flex-grow: 1;
     margin-right: 10px;
     font-size: 0.9em;
-    color: #333;
+    color: var(--text-primary);
 }
 
 /* File manager header */
@@ -724,7 +860,7 @@ button:disabled,
 .file-manager-header h2 {
     margin: 0;
     font-size: 1.4em;
-    color: #444;
+    color: var(--text-primary);
 }
 
 .file-manager-header button {
@@ -732,13 +868,14 @@ button:disabled,
     font-size: 0.9em;
     cursor: pointer;
     border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-container);
+    color: var(--text-primary);
     transition: background-color 0.3s;
 }
 
 .file-manager-header button:hover {
-    background-color: #e0e0e0;
+    background-color: var(--bg-surface-hover);
 }
 
 /* Uploads Manager Modal Styles */
@@ -750,10 +887,12 @@ button:disabled,
 #fileUploadInput {
     margin-bottom: 15px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-light);
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
+    background-color: var(--bg-container);
+    color: var(--text-primary);
 }
 
 #fileList {
@@ -769,16 +908,16 @@ button:disabled,
     gap: 15px;
     align-items: center;
     padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    background-color: #fff;
+    border-bottom: 1px solid var(--border-lighter);
+    background-color: var(--bg-container);
     transition: background-color 0.2s;
 }
 
 .file-item.header {
-    background-color: #f8f9fa;
+    background-color: var(--bg-header-row);
     font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid #dee2e6;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-light);
 }
 
 .file-item:last-child {
@@ -786,23 +925,23 @@ button:disabled,
 }
 
 .file-item:hover:not(.header) {
-    background-color: #f8f9fa;
+    background-color: var(--bg-header-row);
 }
 
 .file-item.selected:not(.header) {
-    background-color: #e8f5e9;
+    background-color: var(--bg-selected);
 }
 
 .file-name-col {
     font-weight: 500;
-    color: #333;
+    color: var(--text-primary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .file-date-col {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9em;
     text-align: center;
 }
@@ -814,12 +953,12 @@ button:disabled,
 }
 
 .delete-button {
-    background-color: white;
-    color: #dc3545;
+    background-color: var(--bg-container);
+    color: var(--error-color);
     width: 24px;
     height: 24px;
     padding: 0;
-    border: 2px solid #dc3545;
+    border: 2px solid var(--error-color);
     border-radius: 50%;
     cursor: pointer;
     font-size: 20px;
@@ -832,8 +971,8 @@ button:disabled,
 }
 
 .delete-button:hover {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--error-color);
+    color: var(--text-inverted);
     transform: scale(1.1);
 }
 
@@ -843,7 +982,7 @@ button:disabled,
 }
 
 #modalDeleteButton:disabled {
-    background-color: #dc3545;
+    background-color: var(--error-color);
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -868,12 +1007,12 @@ button:disabled,
 }
 
 .modal .file-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--bg-surface);
 }
 
 .modal .file-item.selected {
-    background-color: #e8f5e9;
-    border-left: 3px solid #4CAF50;
+    background-color: var(--bg-selected);
+    border-left: 3px solid var(--success-color);
 }
 
 /* Loader for async operations */
@@ -935,4 +1074,4 @@ button:disabled,
         width: 100%;
         margin-bottom: 8px;
     }
-} 
+}

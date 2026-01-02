@@ -56,8 +56,14 @@ class AdminController {
 
         if (FileManager::writeFile($filename, $content)) {
             // Regenerate the blog
-            $blogGenerator = new BlogGenerator();
-            $blogGenerator->generate();
+            try {
+                $blogGenerator = new BlogGenerator();
+                $blogGenerator->generate();
+            } catch (\Exception $e) {
+                // Log the error but don't fail the save operation
+                error_log('Failed to regenerate blog after saving ' . $filename . ': ' . $e->getMessage());
+                // Still return success since the file was saved
+            }
             
             // Get slug from filename (remove .md extension)
             $slug = preg_replace('/\.md$/', '', $filename);
@@ -95,8 +101,14 @@ class AdminController {
     public function deleteFile(string $filename): array {
         if (FileManager::deleteFile($filename)) {
             // Regenerate the blog after successful deletion
-            $blogGenerator = new BlogGenerator();
-            $blogGenerator->generate();
+            try {
+                $blogGenerator = new BlogGenerator();
+                $blogGenerator->generate();
+            } catch (\Exception $e) {
+                // Log the error but don't fail the delete operation
+                error_log('Failed to regenerate blog after deleting ' . $filename . ': ' . $e->getMessage());
+                // Still return success since the file was deleted
+            }
             
             return ['success' => true];
         }
@@ -104,6 +116,16 @@ class AdminController {
     }
 
     public function sendLoginLink(string $adminEmail): bool {
+        // Check rate limit before processing
+        $rateLimiter = new RateLimiter(3, 3600); // 3 requests per hour
+        $limitCheck = $rateLimiter->checkLimit();
+        
+        if (!$limitCheck['allowed']) {
+            $timeUntilReset = $rateLimiter->getTimeUntilReset();
+            $minutesUntilReset = ceil($timeUntilReset / 60);
+            throw new \Exception("Too many login requests. Please try again in {$minutesUntilReset} minute(s).");
+        }
+        
         // Generate a secure random token
         $token = bin2hex(random_bytes(32));
         
@@ -142,6 +164,10 @@ class AdminController {
         try {
             $mailer = new Mailer();
             $mailer->sendLoginLink($adminEmail, $loginUrl);
+            
+            // Record the request only after successful email send
+            $rateLimiter->recordRequest();
+            
             return true;
         } catch (\Exception $e) {
             error_log('Failed to send login email: ' . $e->getMessage());

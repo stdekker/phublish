@@ -40,25 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_login'])) {
     }
 }
 
-// Check origin for all requests
-$allowedOrigin = $config['blog']['allowed_domain'] ?? '';
-if (!$allowedOrigin) {
-    throw new Exception('Allowed domain not configured', 500);
-}
-
-$referer = $_SERVER['HTTP_REFERER'] ?? '';
-
-if ($referer) {
-    $allowedOriginHttp = preg_replace('#^https?://#', 'http://', $allowedOrigin);
-    $allowedOriginHttps = preg_replace('#^https?://#', 'https://', $allowedOrigin);
-    
-    if (!str_starts_with($referer, $allowedOriginHttp) && !str_starts_with($referer, $allowedOriginHttps)) {
-        http_response_code(403);
-        echo "Access denied";
-        exit;
-    }
-}
-
 // Get session lifetime for display
 $sessionLifetime = $config['blog']['session_lifetime'] ?? 3600;
 $sessionLifetimeMinutes = round($sessionLifetime / 60);
@@ -68,6 +49,7 @@ $sessionLifetimeMinutes = round($sessionLifetime / 60);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Admin Login</title>
     <link rel="stylesheet" href="styles.css">
 </head>

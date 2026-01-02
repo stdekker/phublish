@@ -12,20 +12,92 @@ import UploadsManager from './UploadsManager.js';
 
 class Editor {
     constructor() {
+        // Store reference to editor instance for button callback
+        let editorInstance = null;
+        
+        // Create "Read More" button
+        const createReadMoreButton = () => {
+            const button = document.createElement('button');
+            button.className = 'toastui-editor-toolbar-icons';
+            button.style.backgroundImage = 'none';
+            button.style.margin = '0';
+            button.style.padding = '4px 8px';
+            button.innerHTML = `<span style="font-size: 11px; font-weight: bold;">Read More</span>`;
+            button.title = 'Insert Read More separator';
+            button.addEventListener('click', () => {
+                if (!editorInstance) return;
+                
+                // Get current markdown and cursor position
+                const markdown = editorInstance.getMarkdown();
+                const selection = editorInstance.getSelection();
+                
+                if (selection && selection.startOffset !== undefined) {
+                    // Find the line where cursor is positioned
+                    const lines = markdown.split('\n');
+                    let charCount = 0;
+                    let lineIndex = 0;
+                    
+                    for (let i = 0; i < lines.length; i++) {
+                        const lineLength = lines[i].length;
+                        if (charCount + lineLength >= selection.startOffset) {
+                            lineIndex = i;
+                            break;
+                        }
+                        charCount += lineLength + 1; // +1 for newline
+                    }
+                    
+                    // Insert <!--more--> after the current line
+                    lines.splice(lineIndex + 1, 0, '<!--more-->');
+                    editorInstance.setMarkdown(lines.join('\n'));
+                } else {
+                    // If no selection info, append at the end
+                    editorInstance.setMarkdown(markdown + '\n\n<!--more-->\n');
+                }
+            });
+            return button;
+        };
+
+        // Detect dark mode preference
+        const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const editorTheme = prefersDarkMode ? 'dark' : 'light';
+        
+        console.log('Editor theme:', editorTheme, 'Dark mode detected:', prefersDarkMode);
+        
         this.editor = new toastui.Editor({
             el: document.getElementById('editor'),
             height: '500px',
             initialEditType: 'wysiwyg',
             previewStyle: 'vertical',
+            theme: editorTheme,
             toolbarItems: [
                 ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
                 ['ul', 'ol', 'task', 'indent', 'outdent'],
                 ['table', 'link'],
                 ['code', 'codeblock'],
-                ['scrollSync']
+                ['scrollSync'],
+                [{
+                    el: createReadMoreButton(),
+                    tooltip: 'Insert Read More separator'
+                }]
             ]
         });
+        
+        // Listen for theme changes and update editor theme
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            const handleThemeChange = (e) => {
+                // Check if changeTheme method exists (available in ToastUI Editor 3.0+)
+                if (this.editor && typeof this.editor.changeTheme === 'function') {
+                    this.editor.changeTheme(e.matches ? 'dark' : 'light');
+                }
+                // If changeTheme doesn't exist, the theme is set on initialization only
+            };
+            mediaQuery.addEventListener('change', handleThemeChange);
+        }
+        
+        // Set the editor instance reference after creation
+        editorInstance = this.editor;
         
         // Use ModalManager instead of directly instantiating modals
         this.selectedFile = null;
@@ -37,11 +109,19 @@ class Editor {
 
     setupEventListeners() {
         // Field validation
-        ['title', 'date'].forEach(fieldId => {
+        ['date'].forEach(fieldId => {
             const input = document.getElementById(fieldId);
             input.addEventListener('blur', () => this.validateField(fieldId, input.value));
             input.addEventListener('input', () => this.clearFieldError(fieldId));
         });
+
+        // Title field - validation and filename generation
+        const titleInput = document.getElementById('title');
+        titleInput.addEventListener('blur', () => {
+            this.validateField('title', titleInput.value);
+            this.generateFilenameFromTitle();
+        });
+        titleInput.addEventListener('input', () => this.clearFieldError('title'));
 
         // Filename handling
         const filenameInput = document.getElementById('currentFileName');
@@ -55,10 +135,12 @@ class Editor {
 
         filenameInput.addEventListener('blur', (e) => {
             // Format the filename and ensure it has .md extension when user finishes editing
-            let value = formatSlug(e.target.value);
-            if (!value.toLowerCase().endsWith('.md')) {
-                value += '.md';
+            let value = e.target.value;
+            // Strip .md extension if user added it (to avoid double .md.md)
+            if (value.toLowerCase().endsWith('.md')) {
+                value = value.slice(0, -3);
             }
+            value = formatSlug(value) + '.md';
             e.target.value = value;
             this.validateField('filename', value);
         });
@@ -89,6 +171,9 @@ class Editor {
     initialize() {
         this.loadFiles();
         updateCurrentFileName('new-post.md');
+        // Set default values for new posts
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('draft').checked = true;
         this.updateDeleteButtonState(); // Initially disable delete button since no file is loaded
     }
 
@@ -149,6 +234,22 @@ class Editor {
         }
         if (inputElement) {
             inputElement.classList.remove('input-error');
+        }
+    }
+
+    generateFilenameFromTitle() {
+        const filenameInput = document.getElementById('currentFileName');
+        const currentFilename = filenameInput.value.trim();
+        const title = document.getElementById('title').value.trim();
+        
+        // Only generate filename if:
+        // 1. Filename is empty or default "new-post.md"
+        // 2. Title has a value
+        if ((!currentFilename || currentFilename === 'new-post.md') && title) {
+            const slug = formatSlug(title);
+            if (slug) {
+                filenameInput.value = `${slug}.md`;
+            }
         }
     }
 
@@ -324,8 +425,9 @@ class Editor {
 
     handleNewFile() {
         document.getElementById('title').value = '';
-        document.getElementById('date').value = '';
-        document.getElementById('draft').checked = false;
+        // Set today's date as default
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('draft').checked = true;
         this.editor.setMarkdown('');
         document.getElementById('currentFileName').value = 'new-post.md';
         this.selectedFile = null; // Store selected file in the Editor instance instead

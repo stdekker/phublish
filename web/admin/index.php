@@ -2,65 +2,18 @@
 require_once '../../vendor/autoload.php';
 
 use Phublish\Admin\Security;
-use Symfony\Component\Yaml\Yaml;
-
-// Perform security checks - regular page that requires authentication
 Security::securityCheck(true, false);
 
-// Load blog configuration for template variables
-$configPath = dirname(__DIR__, 2) . '/config/blog.yaml';
-$config = Yaml::parseFile($configPath);
-
-// Check origin for all requests
-$allowedOrigin = $config['blog']['allowed_domain'] ?? '';
-if (!$allowedOrigin) {
-    throw new Exception('Admin domain not configured', 500);
-}
-
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-
-// For non-AJAX requests, check the referer
-if (empty($origin)) {
-    $referer = $_SERVER['HTTP_REFERER'] ?? '';
-    if ($referer) {
-        $allowedOriginHttp = preg_replace('#^https?://#', 'http://', $allowedOrigin);
-        $allowedOriginHttps = preg_replace('#^https?://#', 'https://', $allowedOrigin);
-        
-        if (!str_starts_with($referer, $allowedOriginHttp) && !str_starts_with($referer, $allowedOriginHttps)) {
-            http_response_code(403);
-            echo "Access denied";
-            exit;
-        }
-    }
-}
-// For AJAX requests, check the origin
-else {
-    $allowedOriginHttp = preg_replace('#^https?://#', 'http://', $allowedOrigin);
-    $allowedOriginHttps = preg_replace('#^https?://#', 'https://', $allowedOrigin);
-    
-    if ($origin !== $allowedOriginHttp && $origin !== $allowedOriginHttps) {
-        http_response_code(403);
-        header('Content-Type: application/json');
-        echo json_encode([
-            'error' => 'Invalid origin',
-            'code' => 403
-        ]);
-        exit;
-    }
-    
-    // Set CORS headers for AJAX requests
-    header("Access-Control-Allow-Origin: $origin");
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, X-Admin-Token, X-Requested-With");
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Markdown Editor</title>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
