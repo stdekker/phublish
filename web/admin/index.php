@@ -11,14 +11,14 @@ Security::securityCheck(true, false);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <title>Markdown Editor</title>
+    <title>Phublish - Markdown Editor</title>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="main-header">
-        <h1>Edit Markdown Files</h1>
+        <h1>Phublish</h1>
         <button id="logoutButton" class="danger-button">
             <span class="logout-text">Logout</span>
             <span class="logout-icon"></span>

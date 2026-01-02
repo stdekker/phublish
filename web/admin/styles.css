@@ -521,6 +521,32 @@ button:disabled,
 }
 
 /* File list styles */
+.file-search-container {
+    margin-bottom: 15px;
+}
+
+.file-search-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: var(--bg-container);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.file-search-input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.file-search-input::placeholder {
+    color: var(--text-muted);
+}
+
 .file-list-container {
     margin-top: 15px;
     border: 1px solid var(--border-light);

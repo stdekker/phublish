@@ -24,7 +24,7 @@ composer.lock
 Thumbs.db 
 
 # Token files
-/data/tokens.json 
+/data/*
 
 # Uploaded content
 /web/uploads/ 
